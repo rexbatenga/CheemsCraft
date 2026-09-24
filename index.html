@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CheemsCraft Templates & UI Kits</title>
+    
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="Cc logo.png">
 
@@ -27,6 +28,7 @@
         }
     </script>
     
+    <!-- Custom Style Tokens and Animations -->
     <style>
         .hide-scrollbar::-webkit-scrollbar { display: none; }
         .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
@@ -36,38 +38,50 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
+
+        /* Aspect ratio utility helpers */
+        .aspect-16-9 { aspect-ratio: 16 / 9; }
+        .aspect-4-3 { aspect-ratio: 4 / 3; }
+        .aspect-1-1 { aspect-ratio: 1 / 1; }
+        .aspect-21-9 { aspect-ratio: 21 / 9; }
+        .aspect-auto { aspect-ratio: auto; }
     </style>
 
-    <!-- Firebase SDKs -->
+    <!-- Firebase Compat SDKs -->
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
 </head>
 <body class="bg-[#FFFFFF] text-gray-800 font-sans antialiased min-h-screen flex flex-col selection:bg-rose-100 selection:text-rose-900">
 
+    <!-- Creator Admin Top Toolbar -->
     <div id="creator-bar" class="hidden bg-gray-900 text-white px-4 py-2.5 shadow-md sticky top-0 z-50 transition-all duration-300">
-        <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-3 text-sm">
+        <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-3 text-xs">
             <div class="flex items-center space-x-2 font-medium">
-                <span class="inline-block w-2.5 h-2.5 bg-emerald-400 rounded-full animate-pulse"></span>
+                <span id="cms-indicator" class="inline-block w-2.5 h-2.5 bg-emerald-400 rounded-full animate-pulse"></span>
                 <span id="cms-status-text">Firebase Cloud Sync Active</span>
             </div>
             <div class="flex items-center space-x-2">
-                <button onclick="openProductModal()" class="bg-white text-gray-900 hover:bg-gray-100 px-3.5 py-1.5 rounded-lg text-xs font-bold transition shadow-sm">
+                <button onclick="openProductModal()" class="bg-white text-gray-900 hover:bg-gray-100 px-3 py-1.5 rounded-lg text-xs font-bold transition shadow-sm">
                     + Add New Template
                 </button>
-                <button onclick="exportHTMLCode()" class="bg-amber-500 hover:bg-amber-600 text-gray-900 font-bold px-3.5 py-1.5 rounded-lg text-xs transition shadow-sm">
-                    Export HTML File
+                <button onclick="openFirebaseConfigModal()" class="bg-gray-800 hover:bg-gray-700 text-gray-200 px-3 py-1.5 rounded-lg text-xs font-semibold transition border border-gray-700">
+                    Firebase Setup
+                </button>
+                <button onclick="exportHTMLCode()" class="bg-amber-500 hover:bg-amber-600 text-gray-900 font-bold px-3 py-1.5 rounded-lg text-xs transition shadow-sm">
+                    Export HTML
                 </button>
                 <button onclick="toggleCreatorMode(false)" class="text-gray-400 hover:text-white px-2 py-1 text-xs font-semibold">
-                    Exit
+                    Exit Creator
                 </button>
             </div>
         </div>
     </div>
 
+    <!-- Header -->
     <header class="border-b border-gray-100 bg-white/90 backdrop-blur-md sticky top-0 z-40">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between gap-4">
             
-            <!-- Branding: Side-by-Side Logo Image and Title Text -->
+            <!-- Branding: Logo Image & Title (Triple-click trigger) -->
             <div class="flex items-center space-x-3 cursor-pointer group select-none" id="brand-logo-trigger" onclick="handleLogoClick()">
                 <img src="Cc logo.png" alt="CheemsCraft Logo" class="h-10 w-auto object-contain transition-transform group-hover:scale-105" onerror="this.style.display='none'; document.getElementById('fallback-logo-icon').style.display='flex'">
                 <div id="fallback-logo-icon" class="hidden h-10 w-10 bg-gray-900 text-white font-bold text-lg items-center justify-center rounded-xl">Cc</div>
@@ -81,17 +95,17 @@
             <div class="flex items-center space-x-3">
                 <div class="relative inline-block text-left">
                     <select id="currency-select" onchange="handleCurrencyChange(this.value)" class="appearance-none bg-gray-50 border border-gray-200 text-gray-700 text-xs font-semibold py-2 pl-3 pr-8 rounded-xl focus:outline-none focus:ring-2 focus:ring-rose-200 focus:border-rose-400 transition cursor-pointer">
-                        <option value="PHP">PHP (₱)</option>
+                        <option value="PHP">PHP (PHP)</option>
                         <option value="USD">USD ($)</option>
                         <option value="SGD">SGD (S$)</option>
                         <option value="MYR">MYR (RM)</option>
                         <option value="IDR">IDR (Rp)</option>
-                        <option value="THB">THB (฿)</option>
-                        <option value="VND">VND (₫)</option>
-                        <option value="EUR">EUR (€)</option>
-                        <option value="GBP">GBP (£)</option>
+                        <option value="THB">THB (THB)</option>
+                        <option value="VND">VND (VND)</option>
+                        <option value="EUR">EUR (EUR)</option>
+                        <option value="GBP">GBP (GBP)</option>
                         <option value="AUD">AUD (A$)</option>
-                        <option value="JPY">JPY (¥)</option>
+                        <option value="JPY">JPY (JPY)</option>
                     </select>
                     <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-500">
                         <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
@@ -101,7 +115,9 @@
         </div>
     </header>
 
+    <!-- Main Content Area -->
     <main class="flex-grow">
+        <!-- Hero Section -->
         <section class="max-w-5xl mx-auto px-4 sm:px-6 pt-14 pb-10 text-center">
             <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-gray-900 tracking-tight leading-[1.15] mb-6">
                 Practical digital tools designed to <span class="font-serif italic font-normal gradient-text text-5xl sm:text-6xl lg:text-7xl">save you time</span>
@@ -111,12 +127,13 @@
             </p>
 
             <div class="max-w-xl mx-auto space-y-4">
+                <!-- Search Input -->
                 <div class="relative">
-                    <input type="text" id="search-input" oninput="renderStorefront()" placeholder="Search templates, spreadsheets, or platforms..." class="w-full bg-gray-50/80 border border-gray-200 rounded-2xl py-3.5 pl-11 pr-4 text-sm text-gray-800 placeholder-gray-400 focus:outline-none focus:bg-white focus:ring-2 focus:ring-rose-200 focus:border-rose-400 transition shadow-sm">
+                    <input type="text" id="search-input" oninput="renderStorefront()" placeholder="Search templates, spreadsheets, or categories..." class="w-full bg-gray-50/80 border border-gray-200 rounded-2xl py-3.5 pl-11 pr-4 text-sm text-gray-800 placeholder-gray-400 focus:outline-none focus:bg-white focus:ring-2 focus:ring-rose-200 focus:border-rose-400 transition shadow-sm">
                     <svg class="w-5 h-5 text-gray-400 absolute left-3.5 top-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
                 </div>
 
-                <!-- Audience Filters (Strict Emoji Usage Permitted Here Only) -->
+                <!-- Target Audience Filter Pills (STRICT EMOJI RESTRICTION: ONLY PERMITTED HERE) -->
                 <div class="flex items-center justify-center gap-2 overflow-x-auto hide-scrollbar py-1">
                     <button onclick="setAudienceFilter('all')" id="aud-all" class="aud-btn active px-3.5 py-1.5 rounded-xl text-xs font-medium transition-all whitespace-nowrap bg-gray-900 text-white shadow-sm">All</button>
                     <button onclick="setAudienceFilter('business')" id="aud-business" class="aud-btn px-3.5 py-1.5 rounded-xl text-xs font-medium transition-all whitespace-nowrap bg-gray-100 text-gray-600 hover:bg-gray-200">Small Business 💼</button>
@@ -125,7 +142,7 @@
                     <button onclick="setAudienceFilter('creators')" id="aud-creators" class="aud-btn px-3.5 py-1.5 rounded-xl text-xs font-medium transition-all whitespace-nowrap bg-gray-100 text-gray-600 hover:bg-gray-200">Creators 🎨</button>
                 </div>
 
-                <!-- Format Filters (Strict NO Emojis) -->
+                <!-- Format / Category Filters (STRICT NO EMOJIS) -->
                 <div class="flex items-center justify-center gap-1.5 overflow-x-auto hide-scrollbar text-xs border-t border-gray-100 pt-3">
                     <button onclick="setPlatformFilter('all')" id="plat-all" class="plat-btn font-semibold text-rose-600 underline underline-offset-4 px-2 py-1">All Formats</button>
                     <button onclick="setPlatformFilter('Spreadsheet')" id="plat-Spreadsheet" class="plat-btn text-gray-500 hover:text-gray-900 px-2 py-1">Spreadsheets</button>
@@ -138,37 +155,70 @@
             </div>
         </section>
 
+        <!-- Product Grid Section -->
         <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-24">
             <div id="product-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                <!-- Products dynamically rendered here -->
+                <!-- Products dynamically rendered via JavaScript -->
             </div>
 
+            <!-- Empty State -->
             <div id="empty-state" class="hidden text-center py-16 px-4">
-                <div class="w-16 h-16 bg-rose-50 text-rose-500 rounded-full flex items-center justify-center mx-auto mb-4 font-bold text-xl">!</div>
+                <div class="w-12 h-12 bg-rose-50 text-rose-500 rounded-full flex items-center justify-center mx-auto mb-4 font-bold text-lg border border-rose-100">!</div>
                 <h3 class="text-lg font-bold text-gray-900 mb-1">No templates found</h3>
                 <p class="text-sm text-gray-500 max-w-sm mx-auto">Try adjusting your filters or search keywords.</p>
             </div>
         </section>
     </main>
 
+    <!-- Footer -->
     <footer class="border-t border-gray-100 py-8 bg-gray-50/50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-gray-500">
             <p>&copy; CheemsCraft Templates & UI Kits. All rights reserved.</p>
             <div class="flex items-center space-x-4">
                 <span id="geo-status" class="text-gray-400">Detecting Region...</span>
-                <button onclick="promptCreatorAccess()" class="text-[10px] text-gray-400 hover:text-gray-600 transition underline">
+                <button onclick="openAuthModal()" class="text-[11px] text-gray-400 hover:text-gray-600 transition underline">
                     creator portal
                 </button>
             </div>
         </div>
     </footer>
 
+    <!-- 1. Centered Floating Creator Authentication Modal -->
+    <div id="auth-modal" class="fixed inset-0 z-50 bg-gray-900/60 backdrop-blur-sm hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl transform transition-all border border-gray-100">
+            <div class="flex items-center justify-between border-b border-gray-100 pb-3 mb-4">
+                <div class="flex items-center space-x-2">
+                    <span class="w-2.5 h-2.5 bg-rose-500 rounded-full"></span>
+                    <h3 class="text-base font-bold text-gray-900">Creator Password Access</h3>
+                </div>
+                <button onclick="closeAuthModal()" class="text-gray-400 hover:text-gray-600 p-1">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+            </div>
+            
+            <form onsubmit="handleAuthSubmit(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-semibold text-gray-700 mb-1">Security Password</label>
+                    <input type="password" id="auth-password" required placeholder="Enter password..." class="w-full border border-gray-200 rounded-xl p-3 text-sm focus:outline-none focus:ring-2 focus:ring-rose-200 focus:border-rose-400">
+                </div>
+                <div id="auth-error" class="hidden text-xs text-rose-500 font-semibold">
+                    Access Denied: Invalid Password.
+                </div>
+                <div class="flex justify-end space-x-2 pt-2">
+                    <button type="button" onclick="closeAuthModal()" class="px-4 py-2 rounded-xl bg-gray-100 text-gray-700 text-xs font-semibold hover:bg-gray-200 transition">Cancel</button>
+                    <button type="submit" class="px-5 py-2 rounded-xl bg-gray-900 text-white text-xs font-semibold hover:bg-gray-800 transition">Unlock Admin Mode</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 2. Template Preview Modal -->
     <div id="preview-modal" class="fixed inset-0 z-50 bg-gray-900/60 backdrop-blur-sm hidden flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
         <div class="bg-white rounded-3xl max-w-4xl w-full overflow-hidden shadow-2xl my-auto max-h-[92vh] flex flex-col transform transition-all">
             <div class="px-6 py-4 border-b border-gray-100 flex items-center justify-between bg-white sticky top-0 z-10">
                 <div class="flex items-center space-x-2">
                     <span id="modal-platform-badge" class="bg-rose-50 text-rose-600 text-xs px-2.5 py-1 rounded-full font-semibold">Platform</span>
-                    <span id="modal-audience-badge" class="bg-gray-100 text-gray-700 text-xs px-2.5 py-1 rounded-full font-medium">Audience</span>
+                    <div id="modal-audience-badges" class="flex items-center gap-1"></div>
                 </div>
                 <button onclick="closePreviewModal()" class="text-gray-400 hover:text-gray-700 p-1 rounded-full transition">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
@@ -176,7 +226,7 @@
             </div>
 
             <div class="p-6 overflow-y-auto space-y-6">
-                <div class="flex items-center justify-between border-b border-gray-100 pb-3">
+                <div class="flex flex-wrap items-center justify-between gap-4 border-b border-gray-100 pb-3">
                     <h2 id="modal-title" class="text-2xl font-bold text-gray-900">Template Title</h2>
                     <div class="flex items-center bg-gray-100 p-1 rounded-xl text-xs font-semibold">
                         <button onclick="setDeviceViewport('desktop')" id="view-desktop" class="px-3 py-1 rounded-lg bg-white shadow-sm text-gray-900">Desktop</button>
@@ -187,21 +237,15 @@
 
                 <div id="device-wrapper" class="w-full bg-gray-50 rounded-2xl border border-gray-200 p-3 flex items-center justify-center transition-all duration-300 mx-auto">
                     <div id="device-screen" class="w-full transition-all duration-300 bg-white rounded-xl overflow-hidden shadow-sm border border-gray-100">
-                        <div id="media-container" class="relative aspect-video bg-gray-900 flex items-center justify-center overflow-hidden">
-                            <img id="modal-image" src="" alt="Template Preview" class="w-full h-full object-cover">
-                            <iframe id="modal-video" class="w-full h-full hidden" frameborder="0" allowfullscreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>
+                        <div id="media-container" class="relative bg-gray-900 flex items-center justify-center overflow-hidden">
+                            <img id="modal-image" src="" alt="Template Preview" class="w-full h-full">
                         </div>
                     </div>
                 </div>
 
-                <div id="modal-tabs" class="flex space-x-2 border-b border-gray-100 pb-3 hidden">
-                    <button onclick="switchMediaTab('image')" id="tab-image" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-gray-900 text-white">Sample Image</button>
-                    <button onclick="switchMediaTab('video')" id="tab-video" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-gray-100 text-gray-600 hover:bg-gray-200">Video Walkthrough Demo</button>
-                </div>
-
                 <div class="space-y-4">
                     <div>
-                        <h4 class="text-xs uppercase font-bold text-gray-400 tracking-wider mb-1">Brief Explanation</h4>
+                        <h4 class="text-xs uppercase font-bold text-gray-400 tracking-wider mb-1">Description & Overview</h4>
                         <p id="modal-description" class="text-sm text-gray-600 leading-relaxed">Explanation text...</p>
                     </div>
 
@@ -215,16 +259,17 @@
             <div class="p-6 bg-gray-50 border-t border-gray-100 flex items-center justify-between sticky bottom-0 z-10">
                 <div>
                     <span class="text-xs text-gray-400 font-medium block">Instant Direct Download</span>
-                    <span id="modal-price" class="text-2xl font-black text-gray-900">₱0.00</span>
+                    <span id="modal-price" class="text-2xl font-black text-gray-900">0.00</span>
                 </div>
                 <a id="modal-buy-link" href="#" target="_blank" rel="noopener" class="bg-gray-900 hover:bg-gray-800 text-white font-semibold text-sm px-6 py-3 rounded-xl transition shadow-md hover:shadow-lg flex items-center gap-2">
-                    <span>Buy Now via Raket.ph</span>
+                    <span>Purchase Template</span>
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
                 </a>
             </div>
         </div>
     </div>
 
+    <!-- 3. Add / Edit Template Modal (With Custom Base64 Upload, Aspect Ratio & Object Fit Controls) -->
     <div id="creator-modal" class="fixed inset-0 z-50 bg-gray-900/60 backdrop-blur-sm hidden flex items-center justify-center p-4 overflow-y-auto">
         <div class="bg-white rounded-3xl max-w-xl w-full p-6 shadow-2xl my-auto max-h-[90vh] overflow-y-auto">
             <div class="flex items-center justify-between border-b border-gray-100 pb-3 mb-4">
@@ -239,13 +284,13 @@
                 
                 <div>
                     <label class="block font-bold text-gray-700 mb-1">Product Title *</label>
-                    <input type="text" id="form-title" required class="w-full border border-gray-200 rounded-xl p-2.5" placeholder="e.g. Automated Small Business Monthly Expense Tracker">
+                    <input type="text" id="form-title" required class="w-full border border-gray-200 rounded-xl p-2.5 focus:outline-none focus:ring-2 focus:ring-rose-200 focus:border-rose-400" placeholder="e.g. Automated Small Business Monthly Expense Tracker">
                 </div>
 
                 <div class="grid grid-cols-2 gap-3">
                     <div>
-                        <label class="block font-bold text-gray-700 mb-1">Platform Format *</label>
-                        <select id="form-platform" required class="w-full border border-gray-200 rounded-xl p-2.5 bg-white">
+                        <label class="block font-bold text-gray-700 mb-1">Format Category *</label>
+                        <select id="form-platform" required class="w-full border border-gray-200 rounded-xl p-2.5 bg-white focus:outline-none focus:ring-2 focus:ring-rose-200">
                             <option value="Spreadsheet">Spreadsheet (Sheets/Excel)</option>
                             <option value="Canva Template">Canva Template</option>
                             <option value="CV / Resume">CV / Resume Pack</option>
@@ -255,45 +300,90 @@
                         </select>
                     </div>
                     <div>
-                        <label class="block font-bold text-gray-700 mb-1">Target Audience *</label>
-                        <select id="form-audience" required class="w-full border border-gray-200 rounded-xl p-2.5 bg-white">
-                            <option value="business">Small Business 💼</option>
-                            <option value="students">Students 🎓</option>
-                            <option value="employees">Employees 🏢</option>
-                            <option value="creators">Creators 🎨</option>
-                        </select>
+                        <label class="block font-bold text-gray-700 mb-1">Base Price in PHP (PHP) *</label>
+                        <input type="number" id="form-price" step="0.01" required class="w-full border border-gray-200 rounded-xl p-2.5 focus:outline-none focus:ring-2 focus:ring-rose-200" placeholder="299.00">
                     </div>
                 </div>
 
-                <div class="grid grid-cols-2 gap-3">
-                    <div>
-                        <label class="block font-bold text-gray-700 mb-1">Base Price in PHP (₱) *</label>
-                        <input type="number" id="form-price" step="0.01" required class="w-full border border-gray-200 rounded-xl p-2.5" placeholder="299.00">
-                    </div>
-                    <div>
-                        <label class="block font-bold text-gray-700 mb-1">Checkout URL (Raket.ph) *</label>
-                        <input type="url" id="form-checkout" required class="w-full border border-gray-200 rounded-xl p-2.5" placeholder="https://raket.ph/youritem">
+                <!-- Target Audiences Checkboxes (Only allowed emojis in labels) -->
+                <div>
+                    <label class="block font-bold text-gray-700 mb-1.5">Target Audience(s) *</label>
+                    <div class="grid grid-cols-2 gap-2 bg-gray-50 p-3 rounded-xl border border-gray-100">
+                        <label class="flex items-center space-x-2 text-gray-700 cursor-pointer">
+                            <input type="checkbox" name="form-audience-check" value="business" class="rounded text-rose-500 focus:ring-rose-400">
+                            <span>Small Business 💼</span>
+                        </label>
+                        <label class="flex items-center space-x-2 text-gray-700 cursor-pointer">
+                            <input type="checkbox" name="form-audience-check" value="students" class="rounded text-rose-500 focus:ring-rose-400">
+                            <span>Students 🎓</span>
+                        </label>
+                        <label class="flex items-center space-x-2 text-gray-700 cursor-pointer">
+                            <input type="checkbox" name="form-audience-check" value="employees" class="rounded text-rose-500 focus:ring-rose-400">
+                            <span>Employees 🏢</span>
+                        </label>
+                        <label class="flex items-center space-x-2 text-gray-700 cursor-pointer">
+                            <input type="checkbox" name="form-audience-check" value="creators" class="rounded text-rose-500 focus:ring-rose-400">
+                            <span>Creators 🎨</span>
+                        </label>
                     </div>
                 </div>
 
                 <div>
-                    <label class="block font-bold text-gray-700 mb-1">Sample Image / Cover Thumbnail URL *</label>
-                    <input type="url" id="form-image" required class="w-full border border-gray-200 rounded-xl p-2.5" placeholder="https://images.unsplash.com/...">
+                    <label class="block font-bold text-gray-700 mb-1">Download / Purchase Link *</label>
+                    <input type="url" id="form-checkout" required class="w-full border border-gray-200 rounded-xl p-2.5 focus:outline-none focus:ring-2 focus:ring-rose-200" placeholder="https://raket.ph/youritem">
+                </div>
+
+                <!-- Thumbnail Image File Upload and Base64 Converter -->
+                <div class="bg-gray-50 p-3.5 rounded-2xl border border-gray-200/80 space-y-3">
+                    <div class="flex items-center justify-between">
+                        <label class="block font-bold text-gray-800">Thumbnail Image File *</label>
+                        <span class="text-[10px] text-gray-400">Base64 Direct Persistence</span>
+                    </div>
+
+                    <div class="flex items-center space-x-2">
+                        <input type="file" id="form-image-file" accept="image/*" onchange="handleImageFileUpload(event)" class="w-full text-xs text-gray-500 file:mr-3 file:py-2 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-gray-900 file:text-white hover:file:bg-gray-800 cursor-pointer">
+                    </div>
+
+                    <!-- Hidden field to hold current base64 or URL -->
+                    <input type="hidden" id="form-image-data">
+
+                    <!-- Sizing and Formatting Controls -->
+                    <div class="grid grid-cols-2 gap-3 pt-1">
+                        <div>
+                            <label class="block font-semibold text-gray-600 mb-1">Aspect Ratio</label>
+                            <select id="form-aspect-ratio" onchange="updateImagePreviewControls()" class="w-full border border-gray-200 rounded-xl p-2 bg-white text-xs">
+                                <option value="aspect-16-9">16:9 (Landscape)</option>
+                                <option value="aspect-4-3" selected>4:3 (Standard)</option>
+                                <option value="aspect-1-1">1:1 (Square)</option>
+                                <option value="aspect-21-9">21:9 (Ultrawide)</option>
+                                <option value="aspect-auto">Original</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block font-semibold text-gray-600 mb-1">Object Fit</label>
+                            <select id="form-object-fit" onchange="updateImagePreviewControls()" class="w-full border border-gray-200 rounded-xl p-2 bg-white text-xs">
+                                <option value="object-cover" selected>Cover (Crop to fill)</option>
+                                <option value="object-contain">Contain (Fit full image)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Real-Time Cropping/Aspect Ratio Preview -->
+                    <div id="image-preview-container" class="hidden mt-2 bg-gray-900 rounded-xl overflow-hidden p-1 border border-gray-300">
+                        <div id="image-preview-box" class="w-full aspect-4-3 overflow-hidden rounded-lg flex items-center justify-center bg-gray-800">
+                            <img id="image-preview-element" src="" class="w-full h-full object-cover">
+                        </div>
+                    </div>
                 </div>
 
                 <div>
-                    <label class="block font-bold text-gray-700 mb-1">Video Tutorial YouTube Embed URL (Optional)</label>
-                    <input type="url" id="form-video" class="w-full border border-gray-200 rounded-xl p-2.5" placeholder="https://www.youtube.com/embed/...">
-                </div>
-
-                <div>
-                    <label class="block font-bold text-gray-700 mb-1">Brief Product Explanation *</label>
-                    <textarea id="form-description" rows="3" required class="w-full border border-gray-200 rounded-xl p-2.5" placeholder="Explain how this tool saves time..."></textarea>
+                    <label class="block font-bold text-gray-700 mb-1">Brief Description / Explanation *</label>
+                    <textarea id="form-description" rows="3" required class="w-full border border-gray-200 rounded-xl p-2.5 focus:outline-none focus:ring-2 focus:ring-rose-200" placeholder="Explain how this tool saves time..."></textarea>
                 </div>
 
                 <div>
                     <label class="block font-bold text-gray-700 mb-1">Key Features List (Comma Separated)</label>
-                    <input type="text" id="form-features" class="w-full border border-gray-200 rounded-xl p-2.5" placeholder="Automated Calculations, Mobile Friendly, Free Updates">
+                    <input type="text" id="form-features" class="w-full border border-gray-200 rounded-xl p-2.5 focus:outline-none focus:ring-2 focus:ring-rose-200" placeholder="Automated Calculations, Mobile Friendly, Free Updates">
                 </div>
 
                 <div class="pt-3 flex justify-end gap-2 sticky bottom-0 bg-white py-2 border-t border-gray-100">
@@ -304,9 +394,47 @@
         </div>
     </div>
 
+    <!-- 4. Firebase Configuration Modal -->
+    <div id="firebase-config-modal" class="fixed inset-0 z-50 bg-gray-900/60 backdrop-blur-sm hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl border border-gray-100">
+            <div class="flex items-center justify-between border-b border-gray-100 pb-3 mb-4">
+                <h3 class="text-base font-bold text-gray-900">Firebase Firestore Cloud Config</h3>
+                <button onclick="closeFirebaseConfigModal()" class="text-gray-400 hover:text-gray-600 p-1">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+            </div>
+            
+            <p class="text-xs text-gray-500 mb-4">The application is pre-configured with embedded credentials. You can update or re-initialize connection parameters here.</p>
+
+            <form onsubmit="handleFirebaseConfigSave(event)" class="space-y-3 text-xs">
+                <div>
+                    <label class="block font-semibold text-gray-700 mb-1">API Key</label>
+                    <input type="text" id="cfg-apiKey" class="w-full border border-gray-200 rounded-xl p-2 font-mono text-[11px]">
+                </div>
+                <div>
+                    <label class="block font-semibold text-gray-700 mb-1">Auth Domain</label>
+                    <input type="text" id="cfg-authDomain" class="w-full border border-gray-200 rounded-xl p-2 font-mono text-[11px]">
+                </div>
+                <div>
+                    <label class="block font-semibold text-gray-700 mb-1">Project ID</label>
+                    <input type="text" id="cfg-projectId" class="w-full border border-gray-200 rounded-xl p-2 font-mono text-[11px]">
+                </div>
+                <div>
+                    <label class="block font-semibold text-gray-700 mb-1">App ID</label>
+                    <input type="text" id="cfg-appId" class="w-full border border-gray-200 rounded-xl p-2 font-mono text-[11px]">
+                </div>
+
+                <div class="flex justify-end space-x-2 pt-3 border-t border-gray-100">
+                    <button type="button" onclick="closeFirebaseConfigModal()" class="px-4 py-2 rounded-xl bg-gray-100 text-gray-700 font-semibold">Close</button>
+                    <button type="submit" class="px-5 py-2 rounded-xl bg-gray-900 text-white font-semibold hover:bg-gray-800">Save & Reconnect</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <script>
-        // Hardcoded Embedded Firebase Credentials
-        const firebaseConfig = {
+        // Pre-populated Embedded Firebase Configuration
+        let firebaseConfig = {
             apiKey: "AIzaSyCp41jeesWvZdpSrL63WA2ddxK4E9FEjGI",
             authDomain: "cheemscraft-6113.firebaseapp.com",
             databaseURL: "https://cheemscraft-6113-default-rtdb.asia-southeast1.firebasedatabase.app",
@@ -317,16 +445,17 @@
             measurementId: "G-F2SRGK1G3D"
         };
 
-        // Fallback Product Inventory Data
+        // Inventory Data Backup / Initial Default Catalog
         let products = [
             {
                 id: "item-1",
                 title: "Automated Small Business Income & Expense Tracker",
                 platform: "Spreadsheet",
-                audience: "business",
+                audiences: ["business"],
                 price: 299,
                 image: "https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?auto=format&fit=crop&w=800&q=80",
-                video: "https://www.youtube.com/embed/dQw4w9WgXcQ",
+                aspectRatio: "aspect-4-3",
+                objectFit: "object-cover",
                 description: "A clean, color-coded Google Sheets & Excel template built specifically for small business owners and freelancers to effortlessly monitor cash flow, tax calculations, and profit margins.",
                 features: ["Automated Monthly Visual Dashboards", "Tax Computation Formulas Built-In", "Google Sheets & Excel Compatible", "Free Lifetime Updates"],
                 checkout: "https://raket.ph"
@@ -335,12 +464,26 @@
                 id: "item-2",
                 title: "Minimalist Modern Portfolio & Resume HTML Kit",
                 platform: "Portfolio HTML",
-                audience: "creators",
+                audiences: ["creators", "employees"],
                 price: 499,
                 image: "https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?auto=format&fit=crop&w=800&q=80",
-                video: "",
-                description: "A sleek, lightweight single-page HTML/Tailwind portfolio built for creators, designers, and developers to display project work with human-designed typography.",
+                aspectRatio: "aspect-16-9",
+                objectFit: "object-cover",
+                description: "A sleek, lightweight single-page HTML/Tailwind portfolio built for creators, designers, and developers to display project work with typography.",
                 features: ["Pure HTML/CSS - Fast Loading", "Mobile Responsive Layout", "Integrated Project Preview Modals", "Clean Minimalist Typography"],
+                checkout: "https://raket.ph"
+            },
+            {
+                id: "item-3",
+                title: "All-in-One Academic Student Hub Notion Template",
+                platform: "Notion System",
+                audiences: ["students"],
+                price: 199,
+                image: "https://images.unsplash.com/photo-1517842645767-c639042777db?auto=format&fit=crop&w=800&q=80",
+                aspectRatio: "aspect-4-3",
+                objectFit: "object-cover",
+                description: "A complete workspace for students to track course assignments, GPA progress, exam schedules, and daily habit logs seamlessly.",
+                features: ["Automated Grade Calculation", "Weekly Schedule Planner", "Reading & Resource Database", "Mobile Notion App Friendly"],
                 checkout: "https://raket.ph"
             }
         ];
@@ -359,8 +502,8 @@
         };
 
         const currencySymbols = {
-            PHP: '₱', USD: '$', SGD: 'S$', MYR: 'RM', IDR: 'Rp',
-            THB: '฿', VND: '₫', EUR: '€', GBP: '£', AUD: 'A$', JPY: '¥'
+            PHP: 'PHP ', USD: '$', SGD: 'S$', MYR: 'RM', IDR: 'Rp',
+            THB: 'THB ', VND: 'VND ', EUR: 'EUR ', GBP: 'GBP ', AUD: 'A$', JPY: 'JPY '
         };
 
         document.addEventListener('DOMContentLoaded', () => {
@@ -374,11 +517,13 @@
 
         function initFirebase() {
             try {
-                if (!firebase.apps.length) {
-                    firebase.initializeApp(firebaseConfig);
+                if (firebase.apps.length) {
+                    firebase.app().delete();
                 }
+                firebase.initializeApp(firebaseConfig);
                 db = firebase.firestore();
                 isFirebaseConnected = true;
+                updateCMSStatus(true, "Firebase Cloud Sync Active");
                 
                 // Real-time listener for Firestore "templates" collection
                 db.collection('templates').onSnapshot(snapshot => {
@@ -388,20 +533,35 @@
                     });
                     if (fetched.length > 0) {
                         products = fetched;
-                        saveLocalProducts(); // Update local backup
+                        saveLocalProducts();
                     }
                     renderStorefront();
                 }, err => {
-                    console.warn("Firestore sync error, falling back to local memory:", err);
+                    console.warn("Firestore listener error, falling back to local memory:", err);
                     isFirebaseConnected = false;
+                    updateCMSStatus(false, "Local Offline Storage Mode");
                     loadLocalProducts();
                     renderStorefront();
                 });
             } catch(e) {
                 console.error("Firebase Initialization Error:", e);
                 isFirebaseConnected = false;
+                updateCMSStatus(false, "Local Offline Storage Mode");
                 loadLocalProducts();
                 renderStorefront();
+            }
+        }
+
+        function updateCMSStatus(online, text) {
+            const ind = document.getElementById('cms-indicator');
+            const txt = document.getElementById('cms-status-text');
+            if (ind && txt) {
+                txt.textContent = text;
+                if (online) {
+                    ind.className = "inline-block w-2.5 h-2.5 bg-emerald-400 rounded-full animate-pulse";
+                } else {
+                    ind.className = "inline-block w-2.5 h-2.5 bg-amber-400 rounded-full";
+                }
             }
         }
 
@@ -442,7 +602,7 @@
 
         function formatPrice(phpPrice) {
             const rate = exchangeRates[activeCurrency] || 1;
-            const symbol = currencySymbols[activeCurrency] || '₱';
+            const symbol = currencySymbols[activeCurrency] || 'PHP ';
             const converted = phpPrice * rate;
 
             if (['IDR', 'VND', 'JPY'].includes(activeCurrency)) {
@@ -451,24 +611,38 @@
             return `${symbol}${converted.toFixed(2)}`;
         }
 
+        // Header logo click handler (Triple-click triggers password modal)
         function handleLogoClick() {
             logoClickCount++;
             if (logoClickCount >= 3) {
                 logoClickCount = 0;
-                promptCreatorAccess();
+                openAuthModal();
             }
+            setTimeout(() => { logoClickCount = 0; }, 1500);
         }
 
-        function promptCreatorAccess() {
+        function openAuthModal() {
             if (isCreatorMode) {
-                alert("Creator Mode is currently active.");
+                alert("Creator Admin Mode is already active.");
                 return;
             }
-            const pwd = prompt("Enter Creator Security Password:");
+            document.getElementById('auth-password').value = '';
+            document.getElementById('auth-error').classList.add('hidden');
+            document.getElementById('auth-modal').classList.remove('hidden');
+        }
+
+        function closeAuthModal() {
+            document.getElementById('auth-modal').classList.add('hidden');
+        }
+
+        function handleAuthSubmit(e) {
+            e.preventDefault();
+            const pwd = document.getElementById('auth-password').value;
             if (pwd === "Rex61103!") {
                 toggleCreatorMode(true);
-            } else if (pwd !== null) {
-                alert("Access Denied: Incorrect Password.");
+                closeAuthModal();
+            } else {
+                document.getElementById('auth-error').classList.remove('hidden');
             }
         }
 
@@ -508,7 +682,8 @@
             grid.innerHTML = '';
 
             const filtered = products.filter(p => {
-                const matchAudience = selectedAudience === 'all' || p.audience === selectedAudience;
+                const audList = Array.isArray(p.audiences) ? p.audiences : (p.audience ? [p.audience] : []);
+                const matchAudience = selectedAudience === 'all' || audList.includes(selectedAudience);
                 const matchPlatform = selectedPlatform === 'all' || p.platform === selectedPlatform;
                 const matchSearch = p.title.toLowerCase().includes(search) || 
                                     p.description.toLowerCase().includes(search) ||
@@ -527,9 +702,12 @@
                 const card = document.createElement('div');
                 card.className = "group bg-white rounded-2xl border border-gray-100 hover:border-gray-200 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col overflow-hidden relative";
 
+                const aspectCls = p.aspectRatio || "aspect-4-3";
+                const fitCls = p.objectFit || "object-cover";
+
                 card.innerHTML = `
-                    <div class="relative aspect-[4/3] bg-gray-100 overflow-hidden cursor-pointer" onclick="openPreviewModal('${p.id}')">
-                        <img src="${p.image}" alt="${p.title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" onerror="this.src='https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=800&q=80'">
+                    <div class="relative w-full ${aspectCls} bg-gray-900 overflow-hidden cursor-pointer flex items-center justify-center" onclick="openPreviewModal('${p.id}')">
+                        <img src="${p.image}" alt="${p.title}" class="w-full h-full ${fitCls} group-hover:scale-105 transition-transform duration-500" onerror="this.src='https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=800&q=80'">
                         <div class="absolute top-3 left-3 flex gap-1.5 flex-wrap">
                             <span class="bg-white/90 backdrop-blur-md text-gray-900 text-[10px] font-bold px-2.5 py-1 rounded-full shadow-sm">${p.platform}</span>
                         </div>
@@ -571,27 +749,27 @@
             document.getElementById('modal-platform-badge').textContent = item.platform;
             
             const audMap = { business: 'Small Business 💼', students: 'Students 🎓', employees: 'Employees 🏢', creators: 'Creators 🎨' };
-            document.getElementById('modal-audience-badge').textContent = audMap[item.audience] || item.audience;
+            const audContainer = document.getElementById('modal-audience-badges');
+            audContainer.innerHTML = '';
             
+            const audList = Array.isArray(item.audiences) ? item.audiences : (item.audience ? [item.audience] : []);
+            audList.forEach(a => {
+                const badge = document.createElement('span');
+                badge.className = "bg-gray-100 text-gray-700 text-xs px-2.5 py-1 rounded-full font-medium";
+                badge.textContent = audMap[a] || a;
+                audContainer.appendChild(badge);
+            });
+
             document.getElementById('modal-description').textContent = item.description;
             document.getElementById('modal-price').textContent = formatPrice(item.price);
             document.getElementById('modal-buy-link').href = item.checkout;
 
             const imgEl = document.getElementById('modal-image');
-            const vidEl = document.getElementById('modal-video');
-            const tabsEl = document.getElementById('modal-tabs');
+            const mediaCont = document.getElementById('media-container');
 
             imgEl.src = item.image;
-            imgEl.classList.remove('hidden');
-            vidEl.classList.add('hidden');
-
-            if (item.video && item.video.trim() !== '') {
-                tabsEl.classList.remove('hidden');
-                vidEl.src = item.video;
-            } else {
-                tabsEl.classList.add('hidden');
-                vidEl.src = '';
-            }
+            mediaCont.className = `relative w-full ${item.aspectRatio || 'aspect-4-3'} bg-gray-900 flex items-center justify-center overflow-hidden`;
+            imgEl.className = `w-full h-full ${item.objectFit || 'object-cover'}`;
 
             const featEl = document.getElementById('modal-features');
             featEl.innerHTML = '';
@@ -608,26 +786,6 @@
 
         function closePreviewModal() {
             document.getElementById('preview-modal').classList.add('hidden');
-            document.getElementById('modal-video').src = '';
-        }
-
-        function switchMediaTab(tab) {
-            const imgEl = document.getElementById('modal-image');
-            const vidEl = document.getElementById('modal-video');
-            const tabImg = document.getElementById('tab-image');
-            const tabVid = document.getElementById('tab-video');
-
-            if (tab === 'image') {
-                imgEl.classList.remove('hidden');
-                vidEl.classList.add('hidden');
-                tabImg.className = "px-3 py-1.5 rounded-lg text-xs font-semibold bg-gray-900 text-white";
-                tabVid.className = "px-3 py-1.5 rounded-lg text-xs font-semibold bg-gray-100 text-gray-600 hover:bg-gray-200";
-            } else {
-                imgEl.classList.add('hidden');
-                vidEl.classList.remove('hidden');
-                tabVid.className = "px-3 py-1.5 rounded-lg text-xs font-semibold bg-gray-900 text-white";
-                tabImg.className = "px-3 py-1.5 rounded-lg text-xs font-semibold bg-gray-100 text-gray-600 hover:bg-gray-200";
-            }
         }
 
         function setDeviceViewport(view) {
@@ -652,9 +810,42 @@
             }
         }
 
+        function handleImageFileUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const base64Data = e.target.result;
+                document.getElementById('form-image-data').value = base64Data;
+                
+                const previewImg = document.getElementById('image-preview-element');
+                previewImg.src = base64Data;
+                
+                document.getElementById('image-preview-container').classList.remove('hidden');
+                updateImagePreviewControls();
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function updateImagePreviewControls() {
+            const aspect = document.getElementById('form-aspect-ratio').value;
+            const fit = document.getElementById('form-object-fit').value;
+            
+            const box = document.getElementById('image-preview-box');
+            const img = document.getElementById('image-preview-element');
+            
+            if (box && img) {
+                box.className = `w-full ${aspect} overflow-hidden rounded-lg flex items-center justify-center bg-gray-800`;
+                img.className = `w-full h-full ${fit}`;
+            }
+        }
+
         function openProductModal(editId = null) {
             const form = document.getElementById('product-form');
             form.reset();
+            document.getElementById('form-image-data').value = '';
+            document.getElementById('image-preview-container').classList.add('hidden');
             
             if (editId) {
                 const item = products.find(p => p.id === editId);
@@ -663,11 +854,25 @@
                     document.getElementById('form-id').value = item.id;
                     document.getElementById('form-title').value = item.title;
                     document.getElementById('form-platform').value = item.platform;
-                    document.getElementById('form-audience').value = item.audience;
                     document.getElementById('form-price').value = item.price;
                     document.getElementById('form-checkout').value = item.checkout;
-                    document.getElementById('form-image').value = item.image;
-                    document.getElementById('form-video').value = item.video || '';
+                    
+                    document.getElementById('form-image-data').value = item.image || '';
+                    document.getElementById('form-aspect-ratio').value = item.aspectRatio || 'aspect-4-3';
+                    document.getElementById('form-object-fit').value = item.objectFit || 'object-cover';
+                    
+                    if (item.image) {
+                        document.getElementById('image-preview-element').src = item.image;
+                        document.getElementById('image-preview-container').classList.remove('hidden');
+                        updateImagePreviewControls();
+                    }
+
+                    // Check audience checkboxes
+                    const auds = Array.isArray(item.audiences) ? item.audiences : (item.audience ? [item.audience] : []);
+                    document.querySelectorAll('input[name="form-audience-check"]').forEach(cb => {
+                        cb.checked = auds.includes(cb.value);
+                    });
+
                     document.getElementById('form-description').value = item.description;
                     document.getElementById('form-features').value = (item.features || []).join(', ');
                 }
@@ -688,14 +893,27 @@
             const featsRaw = document.getElementById('form-features').value;
             const features = featsRaw ? featsRaw.split(',').map(s => s.trim()).filter(Boolean) : [];
 
+            const selectedAudiences = [];
+            document.querySelectorAll('input[name="form-audience-check"]:checked').forEach(cb => {
+                selectedAudiences.push(cb.value);
+            });
+
+            if (selectedAudiences.length === 0) {
+                alert("Please select at least one target audience.");
+                return;
+            }
+
+            const imgData = document.getElementById('form-image-data').value || 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=800&q=80';
+
             const newItem = {
                 title: document.getElementById('form-title').value,
                 platform: document.getElementById('form-platform').value,
-                audience: document.getElementById('form-audience').value,
+                audiences: selectedAudiences,
                 price: parseFloat(document.getElementById('form-price').value) || 0,
                 checkout: document.getElementById('form-checkout').value,
-                image: document.getElementById('form-image').value,
-                video: document.getElementById('form-video').value,
+                image: imgData,
+                aspectRatio: document.getElementById('form-aspect-ratio').value,
+                objectFit: document.getElementById('form-object-fit').value,
                 description: document.getElementById('form-description').value,
                 features
             };
@@ -704,8 +922,7 @@
                 try {
                     await db.collection('templates').doc(id).set(newItem, { merge: true });
                 } catch(err) {
-                    console.error("Firebase Firestore save error:", err);
-                    alert("Error saving to Firebase cloud. Saved locally instead.");
+                    console.error("Firestore write error:", err);
                     saveLocallyFallback(id, newItem);
                 }
             } else {
@@ -733,7 +950,7 @@
                     try {
                         await db.collection('templates').doc(id).delete();
                     } catch(err) {
-                        console.error("Firebase delete error:", err);
+                        console.error("Firestore delete error:", err);
                     }
                 } else {
                     products = products.filter(p => p.id !== id);
@@ -741,6 +958,30 @@
                     renderStorefront();
                 }
             }
+        }
+
+        // Firebase Configuration Modal Handlers
+        function openFirebaseConfigModal() {
+            document.getElementById('cfg-apiKey').value = firebaseConfig.apiKey || '';
+            document.getElementById('cfg-authDomain').value = firebaseConfig.authDomain || '';
+            document.getElementById('cfg-projectId').value = firebaseConfig.projectId || '';
+            document.getElementById('cfg-appId').value = firebaseConfig.appId || '';
+            document.getElementById('firebase-config-modal').classList.remove('hidden');
+        }
+
+        function closeFirebaseConfigModal() {
+            document.getElementById('firebase-config-modal').classList.add('hidden');
+        }
+
+        function handleFirebaseConfigSave(e) {
+            e.preventDefault();
+            firebaseConfig.apiKey = document.getElementById('cfg-apiKey').value;
+            firebaseConfig.authDomain = document.getElementById('cfg-authDomain').value;
+            firebaseConfig.projectId = document.getElementById('cfg-projectId').value;
+            firebaseConfig.appId = document.getElementById('cfg-appId').value;
+            
+            initFirebase();
+            closeFirebaseConfigModal();
         }
 
         function exportHTMLCode() {

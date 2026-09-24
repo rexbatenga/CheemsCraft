@@ -7,11 +7,9 @@
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Supabase JS CDN -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
         tailwind.config = {
             theme: {
@@ -19,27 +17,18 @@
                     fontFamily: {
                         sans: ['"Plus Jakarta Sans"', 'sans-serif'],
                         serif: ['"Instrument Serif"', 'serif'],
-                    },
-                    colors: {
-                        brand: {
-                            50: '#fdf8f6',
-                            100: '#f2e8e5',
-                            500: '#e07a5f',
-                            600: '#d1684e',
-                            900: '#3d405b'
-                        }
                     }
                 }
             }
         }
     </script>
     <style>
-        /* Hide scrollbars for clean UI while keeping functionality */
+        /* Hide scrollbars for clean UI while keeping scrolling functionality */
         .hide-scrollbar::-webkit-scrollbar { display: none; }
         .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
         
         .gradient-text {
-            background: linear-gradient(135deg, #d1684e 0%, #f4a261 50%, #e76f51 100%);
+            background: linear-gradient(135deg, #e17055 0%, #fdcb6e 50%, #d63031 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
@@ -52,22 +41,17 @@
         <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-3 text-sm">
             <div class="flex items-center space-x-2 font-medium">
                 <span class="inline-block w-2.5 h-2.5 bg-emerald-400 rounded-full animate-pulse"></span>
-                <span>Creator Mode Active</span>
-                <span id="cloud-badge" class="bg-gray-800 text-gray-300 text-xs px-2 py-0.5 rounded border border-gray-700 ml-2">Local Mode</span>
+                <span>Creator CMS Active</span>
             </div>
             <div class="flex items-center space-x-2">
-                <button onclick="openProductModal()" class="bg-white text-gray-900 hover:bg-gray-100 px-3 py-1 rounded text-xs font-semibold transition">
-                    + Add New Product
+                <button onclick="openProductModal()" class="bg-white text-gray-900 hover:bg-gray-100 px-3.5 py-1.5 rounded-lg text-xs font-bold transition shadow-sm">
+                    + Add New Template
                 </button>
-                <button onclick="openCloudConfig()" class="bg-gray-800 hover:bg-gray-700 text-gray-200 border border-gray-700 px-3 py-1 rounded text-xs font-semibold transition flex items-center gap-1">
-                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
-                    Cloud Sync
+                <button onclick="exportHTMLCode()" class="bg-amber-500 hover:bg-amber-600 text-gray-900 font-bold px-3.5 py-1.5 rounded-lg text-xs transition shadow-sm">
+                    Export HTML File
                 </button>
-                <button onclick="exportHTMLCode()" class="bg-amber-500 hover:bg-amber-600 text-gray-900 font-semibold px-3 py-1 rounded text-xs transition">
-                    Export HTML
-                </button>
-                <button onclick="toggleCreatorMode(false)" class="text-gray-400 hover:text-white px-2 py-1 text-xs">
-                    Exit
+                <button onclick="toggleCreatorMode(false)" class="text-gray-400 hover:text-white px-2 py-1 text-xs font-semibold">
+                    Exit Creator Mode
                 </button>
             </div>
         </div>
@@ -87,7 +71,7 @@
                 </div>
             </div>
 
-            <!-- Currency Switcher & Controls -->
+            <!-- Currency Switcher & Global Controls -->
             <div class="flex items-center space-x-3">
                 <div class="relative inline-block text-left">
                     <select id="currency-select" onchange="handleCurrencyChange(this.value)" class="appearance-none bg-gray-50 border border-gray-200 text-gray-700 text-xs font-semibold py-2 pl-3 pr-8 rounded-xl focus:outline-none focus:ring-2 focus:ring-rose-200 focus:border-rose-400 transition cursor-pointer">
@@ -114,7 +98,7 @@
     <!-- Main Content Area -->
     <main class="flex-grow">
         <!-- Hero Banner Section -->
-        <section class="max-w-5xl mx-auto px-4 sm:px-6 pt-16 pb-12 text-center">
+        <section class="max-w-5xl mx-auto px-4 sm:px-6 pt-14 pb-10 text-center">
             <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-gray-900 tracking-tight leading-[1.15] mb-6">
                 Practical digital tools designed to <span class="font-serif italic font-normal gradient-text text-5xl sm:text-6xl lg:text-7xl">save you time</span>
             </h1>
@@ -125,11 +109,11 @@
             <!-- Search & Filter Controls -->
             <div class="max-w-xl mx-auto space-y-4">
                 <div class="relative">
-                    <input type="text" id="search-input" oninput="renderStorefront()" placeholder="Search templates, formats, or tools..." class="w-full bg-gray-50/80 border border-gray-200 rounded-2xl py-3.5 pl-11 pr-4 text-sm text-gray-800 placeholder-gray-400 focus:outline-none focus:bg-white focus:ring-2 focus:ring-rose-200 focus:border-rose-400 transition shadow-sm">
+                    <input type="text" id="search-input" oninput="renderStorefront()" placeholder="Search templates, spreadsheets, or platforms..." class="w-full bg-gray-50/80 border border-gray-200 rounded-2xl py-3.5 pl-11 pr-4 text-sm text-gray-800 placeholder-gray-400 focus:outline-none focus:bg-white focus:ring-2 focus:ring-rose-200 focus:border-rose-400 transition shadow-sm">
                     <svg class="w-5 h-5 text-gray-400 absolute left-3.5 top-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
                 </div>
 
-                <!-- Audience Filters (EMOJIS PERMITTED STRICTLY HERE ONLY) -->
+                <!-- Audience Filter Pills (EMOJIS ALLOWED STRICTLY HERE ONLY) -->
                 <div class="flex items-center justify-center gap-2 overflow-x-auto hide-scrollbar py-1">
                     <button onclick="setAudienceFilter('all')" id="aud-all" class="aud-btn active px-3.5 py-1.5 rounded-xl text-xs font-medium transition-all whitespace-nowrap bg-gray-900 text-white shadow-sm">All</button>
                     <button onclick="setAudienceFilter('business')" id="aud-business" class="aud-btn px-3.5 py-1.5 rounded-xl text-xs font-medium transition-all whitespace-nowrap bg-gray-100 text-gray-600 hover:bg-gray-200">Small Business 💼</button>
@@ -156,22 +140,22 @@
                 <!-- Dynamically Rendered Products -->
             </div>
 
-            <!-- Empty State -->
+            <!-- Empty Search State -->
             <div id="empty-state" class="hidden text-center py-16 px-4">
                 <div class="w-16 h-16 bg-rose-50 text-rose-500 rounded-full flex items-center justify-center mx-auto mb-4 font-bold text-xl">!</div>
                 <h3 class="text-lg font-bold text-gray-900 mb-1">No templates found</h3>
-                <p class="text-sm text-gray-500 max-w-sm mx-auto">Try clearing your search query or selecting a different platform format.</p>
+                <p class="text-sm text-gray-500 max-w-sm mx-auto">Try clearing your search query or choosing a different format category.</p>
             </div>
         </section>
     </main>
 
-    <!-- Simple Footer -->
+    <!-- Footer -->
     <footer class="border-t border-gray-100 py-8 bg-gray-50/50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-gray-500">
             <p>&copy; CheemsCraft Templates & UI Kits. All rights reserved.</p>
             <div class="flex items-center space-x-4">
                 <span id="geo-status" class="text-gray-400">Detecting Region...</span>
-                <!-- Super tiny, subtle Creator Portal Access Link in the far bottom right -->
+                <!-- Super tiny discreet link in bottom right corner -->
                 <button onclick="promptCreatorAccess()" class="text-[10px] text-gray-400 hover:text-gray-600 transition underline">
                     creator portal
                 </button>
@@ -179,7 +163,7 @@
         </div>
     </footer>
 
-    <!-- Product Detail & Interactive Device Preview Modal -->
+    <!-- Product Preview & Interactive Viewport Modal -->
     <div id="preview-modal" class="fixed inset-0 z-50 bg-gray-900/60 backdrop-blur-sm hidden flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
         <div class="bg-white rounded-3xl max-w-4xl w-full overflow-hidden shadow-2xl my-auto max-h-[92vh] flex flex-col transform transition-all">
             <!-- Modal Header -->
@@ -193,9 +177,9 @@
                 </button>
             </div>
 
-            <!-- Modal Scrollable Content Body -->
+            <!-- Modal Content Body -->
             <div class="p-6 overflow-y-auto space-y-6">
-                <!-- Device Viewport Toggle (For Web/Interactive Media) -->
+                <!-- Device Viewport Toggle -->
                 <div class="flex items-center justify-between border-b border-gray-100 pb-3">
                     <h2 id="modal-title" class="text-2xl font-bold text-gray-900">Template Title</h2>
                     <div class="flex items-center bg-gray-100 p-1 rounded-xl text-xs font-semibold">
@@ -205,45 +189,42 @@
                     </div>
                 </div>
 
-                <!-- Preview Frame Container -->
+                <!-- Preview Frame -->
                 <div id="device-wrapper" class="w-full bg-gray-50 rounded-2xl border border-gray-200 p-3 flex items-center justify-center transition-all duration-300 mx-auto">
                     <div id="device-screen" class="w-full transition-all duration-300 bg-white rounded-xl overflow-hidden shadow-sm border border-gray-100">
-                        <!-- Dynamic Media Embed (Image or Video) -->
                         <div id="media-container" class="relative aspect-video bg-gray-900 flex items-center justify-center overflow-hidden">
-                            <!-- Image View -->
                             <img id="modal-image" src="" alt="Template Preview" class="w-full h-full object-cover">
-                            <!-- Video View (If available) -->
                             <iframe id="modal-video" class="w-full h-full hidden" frameborder="0" allowfullscreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>
                         </div>
                     </div>
                 </div>
 
-                <!-- Media Switcher Tabs (If Video Walkthrough Exists) -->
+                <!-- Media Switcher Tabs -->
                 <div id="media-tabs" class="flex space-x-2 border-b border-gray-100 pb-3 hidden">
                     <button onclick="switchMediaTab('image')" id="tab-image" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-gray-900 text-white">Sample Image</button>
-                    <button onclick="switchMediaTab('video')" id="tab-video" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-gray-100 text-gray-600 hover:bg-gray-200">Video Tutorial Demo</button>
+                    <button onclick="switchMediaTab('video')" id="tab-video" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-gray-100 text-gray-600 hover:bg-gray-200">Video Walkthrough Demo</button>
                 </div>
 
-                <!-- Template Description & Details -->
+                <!-- Template Description -->
                 <div class="space-y-4">
                     <div>
                         <h4 class="text-xs uppercase font-bold text-gray-400 tracking-wider mb-1">Brief Explanation</h4>
-                        <p id="modal-description" class="text-sm text-gray-600 leading-relaxed">Detailed description will appear here.</p>
+                        <p id="modal-description" class="text-sm text-gray-600 leading-relaxed">Explanation text...</p>
                     </div>
 
                     <div>
                         <h4 class="text-xs uppercase font-bold text-gray-400 tracking-wider mb-2">Key Highlights</h4>
                         <ul id="modal-features" class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs text-gray-700">
-                            <!-- Feature bullets inserted dynamically -->
+                            <!-- Dynamically loaded bullets -->
                         </ul>
                     </div>
                 </div>
             </div>
 
-            <!-- Modal Footer Purchase Bar -->
+            <!-- Modal Purchase Footer -->
             <div class="p-6 bg-gray-50 border-t border-gray-100 flex items-center justify-between sticky bottom-0 z-10">
                 <div>
-                    <span class="text-xs text-gray-400 font-medium block">Instant Direct Delivery</span>
+                    <span class="text-xs text-gray-400 font-medium block">Instant Direct Download</span>
                     <span id="modal-price" class="text-2xl font-black text-gray-900">₱0.00</span>
                 </div>
                 <a id="modal-buy-link" href="#" target="_blank" rel="noopener" class="bg-gray-900 hover:bg-gray-800 text-white font-semibold text-sm px-6 py-3 rounded-xl transition shadow-md hover:shadow-lg flex items-center gap-2">
@@ -254,7 +235,7 @@
         </div>
     </div>
 
-    <!-- Product Add/Edit Modal (Creator Mode) -->
+    <!-- Product Form Modal (Creator CMS) -->
     <div id="creator-modal" class="fixed inset-0 z-50 bg-gray-900/60 backdrop-blur-sm hidden flex items-center justify-center p-4 overflow-y-auto">
         <div class="bg-white rounded-3xl max-w-xl w-full p-6 shadow-2xl my-auto">
             <div class="flex items-center justify-between border-b border-gray-100 pb-3 mb-4">
@@ -269,7 +250,7 @@
                 
                 <div>
                     <label class="block font-bold text-gray-700 mb-1">Product Title *</label>
-                    <input type="text" id="form-title" required class="w-full border border-gray-200 rounded-xl p-2.5 focus:ring-2 focus:ring-rose-200 focus:outline-none" placeholder="e.g. Automated Monthly Budget Tracker">
+                    <input type="text" id="form-title" required class="w-full border border-gray-200 rounded-xl p-2.5 focus:ring-2 focus:ring-rose-200 focus:outline-none" placeholder="e.g. Automated Small Business Monthly Expense Tracker">
                 </div>
 
                 <div class="grid grid-cols-2 gap-3">
@@ -323,66 +304,23 @@
 
                 <div>
                     <label class="block font-bold text-gray-700 mb-1">Key Features List (Comma Separated)</label>
-                    <input type="text" id="form-features" class="w-full border border-gray-200 rounded-xl p-2.5 focus:ring-2 focus:ring-rose-200 focus:outline-none" placeholder="Automated Formulas, Mobile Friendly, Free Lifetime Updates">
+                    <input type="text" id="form-features" class="w-full border border-gray-200 rounded-xl p-2.5 focus:ring-2 focus:ring-rose-200 focus:outline-none" placeholder="Automated Calculations, Mobile Friendly, Free Updates">
                 </div>
 
                 <div class="pt-3 flex justify-end gap-2">
                     <button type="button" onclick="closeCreatorModal()" class="px-4 py-2 rounded-xl bg-gray-100 text-gray-700 font-semibold">Cancel</button>
-                    <button type="submit" class="px-5 py-2 rounded-xl bg-gray-900 text-white font-semibold hover:bg-gray-800">Save Product</button>
+                    <button type="submit" class="px-5 py-2 rounded-xl bg-gray-900 text-white font-semibold hover:bg-gray-800">Save Template</button>
                 </div>
             </form>
         </div>
     </div>
 
-    <!-- Supabase Cloud Configuration Drawer -->
-    <div id="cloud-modal" class="fixed inset-0 z-50 bg-gray-900/60 backdrop-blur-sm hidden flex items-center justify-center p-4">
-        <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl">
-            <h3 class="text-base font-bold text-gray-900 mb-2">Connect Free Supabase Cloud Database</h3>
-            <p class="text-xs text-gray-500 mb-4 leading-relaxed">
-                Connect your free Supabase database to sync all product edits instantly across all global visitors in real time!
-            </p>
-            <div class="space-y-3 text-xs mb-4">
-                <div>
-                    <label class="block font-bold text-gray-700 mb-1">Supabase URL</label>
-                    <input type="text" id="cfg-supabase-url" class="w-full border border-gray-200 rounded-xl p-2.5" placeholder="https://xyz.supabase.co">
-                </div>
-                <div>
-                    <label class="block font-bold text-gray-700 mb-1">Supabase Anon Key</label>
-                    <input type="text" id="cfg-supabase-key" class="w-full border border-gray-200 rounded-xl p-2.5" placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6...">
-                </div>
-            </div>
-            
-            <div class="bg-amber-50 border border-amber-200 text-amber-800 rounded-xl p-3 text-[11px] mb-4 space-y-1">
-                <p class="font-bold">Required SQL Table Setup in Supabase:</p>
-                <code class="block text-[10px] bg-amber-100 p-1.5 rounded text-amber-900 overflow-x-auto">
-                    CREATE TABLE products (<br>
-                    &nbsp;&nbsp;id TEXT PRIMARY KEY,<br>
-                    &nbsp;&nbsp;title TEXT,<br>
-                    &nbsp;&nbsp;platform TEXT,<br>
-                    &nbsp;&nbsp;audience TEXT,<br>
-                    &nbsp;&nbsp;price NUMERIC,<br>
-                    &nbsp;&nbsp;image TEXT,<br>
-                    &nbsp;&nbsp;video TEXT,<br>
-                    &nbsp;&nbsp;description TEXT,<br>
-                    &nbsp;&nbsp;features JSONB,<br>
-                    &nbsp;&nbsp;checkout TEXT<br>
-                    );
-                </code>
-            </div>
-
-            <div class="flex justify-end gap-2 text-xs">
-                <button onclick="closeCloudConfig()" class="px-4 py-2 rounded-xl bg-gray-100 text-gray-700 font-semibold">Close</button>
-                <button onclick="saveCloudConfig()" class="px-5 py-2 rounded-xl bg-gray-900 text-white font-semibold">Save Credentials</button>
-            </div>
-        </div>
-    </div>
-
     <!-- Application Script Engine -->
     <script>
-        // Global Storefront State
+        // Storefront Products Dataset (Backed in single file)
         let products = [
             {
-                id: "seed-1",
+                id: "item-1",
                 title: "Automated Small Business Income & Expense Tracker",
                 platform: "Spreadsheet",
                 audience: "business",
@@ -394,7 +332,7 @@
                 checkout: "https://raket.ph"
             },
             {
-                id: "seed-2",
+                id: "item-2",
                 title: "Minimalist Modern Portfolio & Resume HTML Kit",
                 platform: "Portfolio HTML",
                 audience: "creators",
@@ -412,23 +350,11 @@
         let selectedAudience = 'all';
         let selectedPlatform = 'all';
         let activeCurrency = 'PHP';
-        let activeViewport = 'desktop';
-        let currentModalItem = null;
-        let supabaseClient = null;
 
-        // Exchange Rates (PHP Base)
+        // Rates & Symbols (PHP Base)
         const exchangeRates = {
-            PHP: 1,
-            USD: 0.018,
-            SGD: 0.024,
-            MYR: 0.084,
-            IDR: 280.0,
-            THB: 0.64,
-            VND: 440.0,
-            EUR: 0.016,
-            GBP: 0.014,
-            AUD: 0.027,
-            JPY: 2.65
+            PHP: 1, USD: 0.018, SGD: 0.024, MYR: 0.084, IDR: 280.0,
+            THB: 0.64, VND: 440.0, EUR: 0.016, GBP: 0.014, AUD: 0.027, JPY: 2.65
         };
 
         const currencySymbols = {
@@ -436,61 +362,21 @@
             THB: '฿', VND: '₫', EUR: '€', GBP: '£', AUD: 'A$', JPY: '¥'
         };
 
-        // Application Initialization
+        // App Initialization
         document.addEventListener('DOMContentLoaded', () => {
-            initSupabase();
-            loadProducts();
+            loadLocalProducts();
             detectGeoCurrency();
             renderStorefront();
         });
 
-        // Supabase Initialization & Real-Time Setup
-        function initSupabase() {
-            const storedUrl = localStorage.getItem('cheems_supabase_url');
-            const storedKey = localStorage.getItem('cheems_supabase_key');
-
-            if (storedUrl && storedKey && window.supabase) {
-                try {
-                    supabaseClient = window.supabase.createClient(storedUrl, storedKey);
-                    document.getElementById('cloud-badge').textContent = 'Cloud Sync Active';
-                    document.getElementById('cloud-badge').className = 'bg-emerald-900 text-emerald-200 text-xs px-2 py-0.5 rounded border border-emerald-700 ml-2';
-
-                    // Subscribe to Realtime DB Changes
-                    supabaseClient
-                        .channel('public:products')
-                        .on('postgres_changes', { event: '*', schema: 'public', table: 'products' }, payload => {
-                            fetchCloudProducts();
-                        })
-                        .subscribe();
-
-                    fetchCloudProducts();
-                } catch (e) {
-                    console.error('Supabase Init Error:', e);
-                }
-            }
-        }
-
-        async function fetchCloudProducts() {
-            if (!supabaseClient) return;
-            const { data, error } = await supabaseClient.from('products').select('*');
-            if (!error && data) {
-                products = data.map(item => ({
-                    ...item,
-                    features: Array.isArray(item.features) ? item.features : JSON.parse(item.features || '[]')
-                }));
-                saveProductsLocal();
-                renderStorefront();
-            }
-        }
-
-        function loadProducts() {
+        function loadLocalProducts() {
             const saved = localStorage.getItem('cheemscraft_products');
             if (saved) {
-                try { products = JSON.parse(saved); } catch (e) { console.error(e); }
+                try { products = JSON.parse(saved); } catch(e) { console.error(e); }
             }
         }
 
-        function saveProductsLocal() {
+        function saveLocalProducts() {
             localStorage.setItem('cheemscraft_products', JSON.stringify(products));
         }
 
@@ -511,7 +397,7 @@
                     }
                 }
             } catch (e) {
-                console.log('IP Geolocation fallback to default PHP');
+                console.log('Geo detection fallback');
             }
             geoEl.textContent = 'Region: Global (PHP)';
         }
@@ -532,7 +418,7 @@
             return `${symbol}${converted.toFixed(2)}`;
         }
 
-        // Secret Creator Mode Trigger Handler
+        // Secret Creator CMS Triggers
         function handleLogoClick() {
             logoClickCount++;
             if (logoClickCount >= 3) {
@@ -543,7 +429,7 @@
 
         function promptCreatorAccess() {
             if (isCreatorMode) {
-                alert("Creator Mode is already enabled!");
+                alert("Creator Mode is currently active.");
                 return;
             }
             const pwd = prompt("Enter Creator Security Password:");
@@ -565,7 +451,7 @@
             renderStorefront();
         }
 
-        // Filter Controls
+        // Category Filter Controls
         function setAudienceFilter(aud) {
             selectedAudience = aud;
             document.querySelectorAll('.aud-btn').forEach(btn => {
@@ -586,7 +472,7 @@
             renderStorefront();
         }
 
-        // Storefront Grid Renderer
+        // Main Store Render Algorithm
         function renderStorefront() {
             const grid = document.getElementById('product-grid');
             const empty = document.getElementById('empty-state');
@@ -615,7 +501,6 @@
                 card.className = "group bg-white rounded-2xl border border-gray-100 hover:border-gray-200 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col overflow-hidden relative";
 
                 card.innerHTML = `
-                    <!-- Sample Image Thumbnail -->
                     <div class="relative aspect-[4/3] bg-gray-100 overflow-hidden cursor-pointer" onclick="openPreviewModal('${p.id}')">
                         <img src="${p.image}" alt="${p.title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" onerror="this.src='https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=800&q=80'">
                         <div class="absolute top-3 left-3 flex gap-1.5 flex-wrap">
@@ -623,7 +508,6 @@
                         </div>
                     </div>
 
-                    <!-- Details -->
                     <div class="p-5 flex flex-col flex-grow">
                         <h3 onclick="openPreviewModal('${p.id}')" class="font-bold text-gray-900 text-base leading-snug mb-2 hover:text-rose-600 cursor-pointer transition line-clamp-2">${p.title}</h3>
                         <p class="text-xs text-gray-500 line-clamp-2 leading-relaxed mb-4 flex-grow">${p.description}</p>
@@ -640,7 +524,6 @@
                         </div>
                     </div>
 
-                    <!-- Creator Mode Controls -->
                     ${isCreatorMode ? `
                         <div class="absolute top-3 right-3 flex items-center space-x-1 bg-gray-900/90 backdrop-blur-md p-1 rounded-xl shadow-lg">
                             <button onclick="editProduct('${p.id}')" class="text-white hover:text-amber-300 p-1 text-xs px-2 font-semibold">Edit</button>
@@ -653,12 +536,11 @@
             });
         }
 
-        // Preview & Detail Modal Logic
+        // Preview & Detail Modal Engine
         function openPreviewModal(id) {
             const item = products.find(p => p.id === id);
             if (!item) return;
 
-            currentModalItem = item;
             document.getElementById('modal-title').textContent = item.title;
             document.getElementById('modal-platform-badge').textContent = item.platform;
             
@@ -669,7 +551,7 @@
             document.getElementById('modal-price').textContent = formatPrice(item.price);
             document.getElementById('modal-buy-link').href = item.checkout;
 
-            // Media
+            // Media Embed Switching
             const imgEl = document.getElementById('modal-image');
             const vidEl = document.getElementById('modal-video');
             const tabsEl = document.getElementById('modal-tabs');
@@ -686,7 +568,7 @@
                 vidEl.src = '';
             }
 
-            // Features
+            // Highlights
             const featEl = document.getElementById('modal-features');
             featEl.innerHTML = '';
             item.features.forEach(f => {
@@ -725,7 +607,6 @@
         }
 
         function setDeviceViewport(view) {
-            activeViewport = view;
             const wrap = document.getElementById('device-screen');
             const btnD = document.getElementById('view-desktop');
             const btnT = document.getElementById('view-tablet');
@@ -747,7 +628,7 @@
             }
         }
 
-        // Creator CRUD Handlers
+        // Creator CMS Handlers
         function openProductModal(editId = null) {
             const form = document.getElementById('product-form');
             form.reset();
@@ -778,9 +659,9 @@
             document.getElementById('creator-modal').classList.add('hidden');
         }
 
-        async function handleProductSubmit(e) {
+        function handleProductSubmit(e) {
             e.preventDefault();
-            const id = document.getElementById('form-id').value || 'prod-' + Date.now();
+            const id = document.getElementById('form-id').value || 'item-' + Date.now();
             const featsRaw = document.getElementById('form-features').value;
             const features = featsRaw ? featsRaw.split(',').map(s => s.trim()).filter(Boolean) : [];
 
@@ -804,13 +685,7 @@
                 products.push(newItem);
             }
 
-            saveProductsLocal();
-
-            // Cloud Save if Supabase connected
-            if (supabaseClient) {
-                await supabaseClient.from('products').upsert([newItem]);
-            }
-
+            saveLocalProducts();
             closeCreatorModal();
             renderStorefront();
         }
@@ -819,47 +694,24 @@
             openProductModal(id);
         }
 
-        async function deleteProduct(id) {
-            if (confirm("Are you sure you want to delete this product listing?")) {
+        function deleteProduct(id) {
+            if (confirm("Are you sure you want to delete this template listing?")) {
                 products = products.filter(p => p.id !== id);
-                saveProductsLocal();
-
-                if (supabaseClient) {
-                    await supabaseClient.from('products').delete().eq('id', id);
-                }
-
+                saveLocalProducts();
                 renderStorefront();
             }
         }
 
-        // Cloud Configuration Modal Controls
-        function openCloudConfig() {
-            document.getElementById('cfg-supabase-url').value = localStorage.getItem('cheems_supabase_url') || '';
-            document.getElementById('cfg-supabase-key').value = localStorage.getItem('cheems_supabase_key') || '';
-            document.getElementById('cloud-modal').classList.remove('hidden');
-        }
-
-        function closeCloudConfig() {
-            document.getElementById('cloud-modal').classList.add('hidden');
-        }
-
-        function saveCloudConfig() {
-            const url = document.getElementById('cfg-supabase-url').value.trim();
-            const key = document.getElementById('cfg-supabase-key').value.trim();
-            if (url && key) {
-                localStorage.setItem('cheems_supabase_url', url);
-                localStorage.setItem('cheems_supabase_key', key);
-                alert("Cloud credentials saved! Initializing live connection...");
-                location.reload();
-            } else {
-                alert("Please enter valid credentials.");
-            }
-        }
-
-        // Single-File Static Export Helper
+        // Single-File Export Helper
         function exportHTMLCode() {
-            const htmlCopy = document.documentElement.outerHTML;
-            const blob = new Blob([htmlCopy], { type: 'text/html' });
+            // Bake active products into JS array
+            const scriptTag = document.querySelector('script:not([src])');
+            let code = document.documentElement.outerHTML;
+
+            const exportedProductsString = `let products = ${JSON.stringify(products, null, 12)};`;
+            code = code.replace(/let products = \[\s*[\s\S]*?\n\s*\];/, exportedProductsString);
+
+            const blob = new Blob([code], { type: 'text/html' });
             const a = document.createElement('a');
             a.href = URL.createObjectURL(blob);
             a.download = 'index.html';

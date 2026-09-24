@@ -1,0 +1,972 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full bg-white text-slate-900">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>CheemsCraft — Templates & UI Kits</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts: Plus Jakarta Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#f0f7ff',
+                            100: '#e0effe',
+                            500: '#2563eb',
+                            600: '#1d4ed8',
+                            700: '#1e40af',
+                            900: '#0f172a'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { 
+            font-family: 'Plus Jakarta Sans', sans-serif; 
+            -webkit-tap-highlight-color: transparent;
+        }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        
+        /* Dynamic viewport responsive device frame previews */
+        .device-desktop { width: 100%; height: 380px; border-radius: 12px; }
+        .device-tablet { width: 100%; max-width: 480px; height: 360px; margin: 0 auto; border-radius: 16px; border: 6px solid #334155; }
+        .device-mobile { width: 100%; max-width: 260px; height: 360px; margin: 0 auto; border-radius: 24px; border: 6px solid #334155; }
+
+        @media (max-width: 640px) {
+            .device-desktop { height: 240px; }
+            .device-tablet { height: 260px; border-width: 4px; }
+            .device-mobile { height: 300px; max-width: 220px; border-width: 4px; }
+        }
+    </style>
+</head>
+<body class="min-h-full flex flex-col bg-white text-slate-800 antialiased selection:bg-brand-100 selection:text-brand-700">
+
+    <!-- Navigation Header -->
+    <header class="sticky top-0 z-30 bg-white/95 backdrop-blur-md border-b border-slate-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16 gap-2">
+                
+                <!-- Logo & Brand (Triple-click trigger for secret Creator Mode) -->
+                <div class="flex items-center gap-2.5 min-w-0">
+                    <button id="logo-btn" onclick="handleLogoClick()" class="flex items-center gap-2.5 text-left group focus:outline-none focus:ring-2 focus:ring-brand-500/20 rounded-lg p-1 transition-all" title="CheemsCraft Storefront">
+                        <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-slate-900 text-white flex items-center justify-center font-bold text-lg shadow-sm group-hover:scale-105 transition-transform flex-shrink-0">
+                            C
+                        </div>
+                        <div class="flex flex-col truncate">
+                            <span class="font-extrabold text-slate-900 tracking-tight text-sm sm:text-base leading-none group-hover:text-brand-600 transition-colors truncate">CheemsCraft</span>
+                            <span class="text-[9px] sm:text-[10px] font-semibold text-slate-400 tracking-wider uppercase mt-0.5 truncate">Templates & UI Kits</span>
+                        </div>
+                    </button>
+                    <span id="creator-badge" class="hidden text-[10px] sm:text-xs bg-amber-100 text-amber-800 font-medium px-2 py-0.5 rounded-full border border-amber-200 flex-shrink-0">
+                        Creator Active
+                    </span>
+                </div>
+
+                <!-- Currency Picker Selector -->
+                <div class="flex items-center gap-2 flex-shrink-0">
+                    <div class="relative inline-flex items-center">
+                        <i class="fa-solid fa-globe text-slate-400 text-xs absolute left-2.5 pointer-events-none"></i>
+                        <select id="currency-select" onchange="changeCurrency(this.value)" class="pl-7 pr-7 py-1.5 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-lg text-xs font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-slate-900 transition-all appearance-none cursor-pointer">
+                            <option value="PHP">PHP (₱)</option>
+                            <option value="USD">USD ($)</option>
+                            <option value="SGD">SGD (S$)</option>
+                            <option value="MYR">MYR (RM)</option>
+                            <option value="IDR">IDR (Rp)</option>
+                            <option value="THB">THB (฿)</option>
+                            <option value="VND">VND (₫)</option>
+                            <option value="EUR">EUR (€)</option>
+                            <option value="GBP">GBP (£)</option>
+                            <option value="AUD">AUD (A$)</option>
+                            <option value="JPY">JPY (¥)</option>
+                        </select>
+                        <i class="fa-solid fa-chevron-down text-slate-400 text-[9px] absolute right-2 pointer-events-none"></i>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="py-8 sm:py-12 md:py-16 bg-white border-b border-slate-100">
+        <div class="max-w-4xl mx-auto px-4 text-center">
+            
+            <h1 class="text-2xl sm:text-4xl md:text-5xl font-extrabold text-slate-900 tracking-tight leading-tight">
+                Crafted for Productivity & Flow
+            </h1>
+
+            <p class="mt-3 sm:mt-4 text-xs sm:text-base text-slate-600 max-w-2xl mx-auto leading-relaxed font-normal px-2">
+                Practical digital tools designed to save you time. Ready-to-use Google Sheets, Notion systems, slide decks, and website templates built for real work.
+            </p>
+
+            <div class="mt-6 sm:mt-8 max-w-xl mx-auto relative px-1">
+                <i class="fa-solid fa-magnifying-glass absolute left-4.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs sm:text-sm"></i>
+                <input type="text" id="search-input" oninput="handleSearch(this.value)" placeholder="Search templates, sheets, or portfolios..." class="w-full pl-10 sm:pl-11 pr-4 py-2.5 sm:py-3 bg-slate-50 border border-slate-200 rounded-xl text-xs sm:text-sm font-medium text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-900 focus:bg-white transition-all shadow-sm">
+            </div>
+        </div>
+    </section>
+
+    <!-- Filter Bar (Scrollable on Mobile) -->
+    <section class="py-4 sm:py-6 bg-slate-50/60 border-b border-slate-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-4">
+            
+            <!-- Target Audience Filter Pill Strip (Only place allowed to show target audience emojis) -->
+            <div>
+                <span class="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-slate-400 block mb-2">Filter by Audience</span>
+                <div class="flex items-center gap-2 overflow-x-auto pb-1.5 hide-scrollbar -mx-4 px-4 sm:mx-0 sm:px-0" id="audience-filters">
+                    <button onclick="setAudienceFilter('all')" class="audience-btn active-audience-btn whitespace-nowrap px-3 py-1.5 text-xs font-semibold rounded-lg border transition-all bg-slate-900 text-white border-slate-900 shadow-sm flex-shrink-0" data-audience="all">
+                        All Audiences
+                    </button>
+                    <!-- Exact permitted emojis restricted to audience pills -->
+                    <button onclick="setAudienceFilter('Small Business')" class="audience-btn whitespace-nowrap px-3 py-1.5 text-xs font-semibold rounded-lg border bg-white text-slate-700 border-slate-200 hover:border-slate-300 transition-all shadow-sm flex-shrink-0" data-audience="Small Business">
+                        Small Business 💼
+                    </button>
+                    <button onclick="setAudienceFilter('Students')" class="audience-btn whitespace-nowrap px-3 py-1.5 text-xs font-semibold rounded-lg border bg-white text-slate-700 border-slate-200 hover:border-slate-300 transition-all shadow-sm flex-shrink-0" data-audience="Students">
+                        Students 🎓
+                    </button>
+                    <button onclick="setAudienceFilter('Employees')" class="audience-btn whitespace-nowrap px-3 py-1.5 text-xs font-semibold rounded-lg border bg-white text-slate-700 border-slate-200 hover:border-slate-300 transition-all shadow-sm flex-shrink-0" data-audience="Employees">
+                        Employees 🏢
+                    </button>
+                    <button onclick="setAudienceFilter('Creators')" class="audience-btn whitespace-nowrap px-3 py-1.5 text-xs font-semibold rounded-lg border bg-white text-slate-700 border-slate-200 hover:border-slate-300 transition-all shadow-sm flex-shrink-0" data-audience="Creators">
+                        Creators 🎨
+                    </button>
+                </div>
+            </div>
+
+            <!-- Format Category Filters (Strictly no emojis permitted) -->
+            <div>
+                <span class="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-slate-400 block mb-2">Filter by Format</span>
+                <div class="flex items-center gap-2 overflow-x-auto pb-1 hide-scrollbar -mx-4 px-4 sm:mx-0 sm:px-0" id="type-filters">
+                    <button onclick="setTypeFilter('all')" class="type-btn active-type-btn whitespace-nowrap px-3 py-1.5 text-xs font-medium rounded-lg border transition-all bg-slate-200 text-slate-800 border-slate-300 flex-shrink-0" data-type="all">
+                        All Formats
+                    </button>
+                    <button onclick="setTypeFilter('Canva Template')" class="type-btn whitespace-nowrap px-3 py-1.5 text-xs font-medium rounded-lg border bg-white text-slate-600 border-slate-200 hover:bg-slate-100 transition-all flex-shrink-0" data-type="Canva Template">
+                        Canva Template
+                    </button>
+                    <button onclick="setTypeFilter('Spreadsheet')" class="type-btn whitespace-nowrap px-3 py-1.5 text-xs font-medium rounded-lg border bg-white text-slate-600 border-slate-200 hover:bg-slate-100 transition-all flex-shrink-0" data-type="Spreadsheet">
+                        Spreadsheet
+                    </button>
+                    <button onclick="setTypeFilter('CV / Resume')" class="type-btn whitespace-nowrap px-3 py-1.5 text-xs font-medium rounded-lg border bg-white text-slate-600 border-slate-200 hover:bg-slate-100 transition-all flex-shrink-0" data-type="CV / Resume">
+                        CV / Resume
+                    </button>
+                    <button onclick="setTypeFilter('Portfolio HTML')" class="type-btn whitespace-nowrap px-3 py-1.5 text-xs font-medium rounded-lg border bg-white text-slate-600 border-slate-200 hover:bg-slate-100 transition-all flex-shrink-0" data-type="Portfolio HTML">
+                        Portfolio HTML
+                    </button>
+                    <button onclick="setTypeFilter('Notion Workspace')" class="type-btn whitespace-nowrap px-3 py-1.5 text-xs font-medium rounded-lg border bg-white text-slate-600 border-slate-200 hover:bg-slate-100 transition-all flex-shrink-0" data-type="Notion Workspace">
+                        Notion Workspace
+                    </button>
+                    <button onclick="setTypeFilter('Social Media Kit')" class="type-btn whitespace-nowrap px-3 py-1.5 text-xs font-medium rounded-lg border bg-white text-slate-600 border-slate-200 hover:bg-slate-100 transition-all flex-shrink-0" data-type="Social Media Kit">
+                        Social Media Kit
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Main Content Grid -->
+    <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10">
+        
+        <!-- Creator Control Suite Bar (Active in Creator Mode) -->
+        <div id="creator-controls" class="hidden mb-6 p-4 bg-slate-900 text-white rounded-2xl shadow-lg flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+            <div class="flex items-center gap-3">
+                <i class="fa-solid fa-wrench text-amber-400 text-base sm:text-lg"></i>
+                <div>
+                    <h3 class="font-bold text-xs sm:text-sm">Creator Mode Unlocked</h3>
+                    <p class="text-[11px] text-slate-400">Manage store listings directly or export updated HTML state.</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-2 w-full sm:w-auto">
+                <button onclick="openProductModal()" class="flex-1 sm:flex-none px-3 py-2 bg-brand-600 hover:bg-brand-500 text-white font-semibold text-xs rounded-xl shadow-sm transition-all flex items-center justify-center gap-1.5">
+                    <i class="fa-solid fa-plus text-[10px]"></i> Add Product
+                </button>
+                <button onclick="exportBakedHTML()" class="flex-1 sm:flex-none px-3 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-semibold text-xs rounded-xl transition-all flex items-center justify-center gap-1.5">
+                    <i class="fa-solid fa-download text-[10px]"></i> Export HTML
+                </button>
+                <button onclick="exitCreatorMode()" class="px-3 py-2 bg-slate-800 hover:bg-rose-900 text-slate-400 hover:text-white font-semibold text-xs rounded-xl transition-all">
+                    Exit
+                </button>
+            </div>
+        </div>
+
+        <!-- Product Grid Header -->
+        <div class="flex flex-wrap items-center justify-between gap-2 mb-6">
+            <h2 class="text-base sm:text-lg font-bold text-slate-900 tracking-tight" id="product-count-label">Available Products</h2>
+            <div class="text-[11px] sm:text-xs text-slate-500 font-medium" id="active-currency-indicator">Prices in PHP (₱)</div>
+        </div>
+
+        <!-- Dynamic Product Grid (1 column on mobile, 2 on tablet, 3/4 on desktop) -->
+        <div id="product-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
+            <!-- Rendered dynamically via JavaScript -->
+        </div>
+
+        <!-- Empty State View -->
+        <div id="empty-state" class="hidden text-center py-12 sm:py-16 px-4">
+            <div class="w-14 h-14 sm:w-16 sm:h-16 bg-slate-100 rounded-2xl flex items-center justify-center mx-auto mb-3 sm:mb-4 text-slate-400">
+                <i class="fa-solid fa-folder-open text-xl sm:text-2xl"></i>
+            </div>
+            <h3 class="text-sm sm:text-base font-bold text-slate-900">No products match your search</h3>
+            <p class="text-xs text-slate-500 mt-1 max-w-xs mx-auto">Try resetting active filters or clearing your search term.</p>
+            <button onclick="resetFilters()" class="mt-4 px-4 py-2 bg-slate-900 text-white rounded-xl text-xs font-semibold hover:bg-slate-800 transition-all">
+                Reset All Filters
+            </button>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="mt-auto border-t border-slate-100 bg-slate-50/60 py-6 sm:py-8 relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left">
+            <div class="flex items-center gap-2.5">
+                <div class="w-6 h-6 rounded-md bg-slate-900 text-white flex items-center justify-center font-bold text-xs">C</div>
+                <span class="text-xs font-semibold text-slate-700">CheemsCraft Templates & UI Kits</span>
+            </div>
+            <p class="text-[11px] text-slate-400">
+                Designed for optimal efficiency. Built with clean HTML & Tailwind CSS.
+            </p>
+        </div>
+        
+        <!-- Discreet Creator Portal Link (Bottom Right Corner) -->
+        <div class="absolute bottom-2 right-3">
+            <button id="admin-toggle-btn" onclick="openCreatorLoginModal()" class="text-[10px] text-slate-300 hover:text-slate-500 transition-colors focus:outline-none opacity-60 hover:opacity-100" title="Creator Access">
+                creator portal
+            </button>
+        </div>
+    </footer>
+
+    <!-- PRODUCT DETAIL & PREVIEW MODAL -->
+    <div id="detail-modal" class="fixed inset-0 z-50 hidden bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
+        <div class="bg-white rounded-2xl max-w-3xl w-full max-h-[92vh] overflow-hidden shadow-2xl border border-slate-100 flex flex-col my-auto">
+            
+            <!-- Modal Header -->
+            <div class="p-3.5 sm:p-4 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
+                <div class="flex items-center gap-2">
+                    <span id="modal-type-badge" class="px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-slate-200 text-slate-700">
+                        Format
+                    </span>
+                    <span id="modal-audience-badge" class="px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-blue-50 text-blue-700 border border-blue-100">
+                        Audience
+                    </span>
+                </div>
+                <button onclick="closeDetailModal()" class="w-8 h-8 rounded-full bg-white hover:bg-slate-200 text-slate-500 flex items-center justify-center transition-colors">
+                    <i class="fa-solid fa-xmark text-sm"></i>
+                </button>
+            </div>
+
+            <!-- Modal Scrollable Content -->
+            <div class="p-4 sm:p-6 overflow-y-auto space-y-5 sm:space-y-6">
+                
+                <!-- Title & Direct Checkout -->
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-4">
+                    <div>
+                        <h2 id="modal-title" class="text-lg sm:text-2xl font-extrabold text-slate-900 leading-snug">Product Title</h2>
+                        <p class="text-[11px] text-slate-400 mt-0.5">Instant digital access delivery</p>
+                    </div>
+                    <div class="flex items-center justify-between sm:justify-end gap-3 pt-2 sm:pt-0">
+                        <div id="modal-price" class="text-xl sm:text-2xl font-black text-slate-900">₱0.00</div>
+                        <a id="modal-checkout-btn" href="#" target="_blank" rel="noopener noreferrer" class="px-4 py-2.5 bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs sm:text-sm rounded-xl transition-all shadow-md flex items-center gap-2">
+                            <span>Get Template</span>
+                            <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Device Preview Toolbar -->
+                <div class="space-y-2.5">
+                    <div class="flex items-center justify-between">
+                        <span class="text-[10px] sm:text-xs font-bold text-slate-400 uppercase tracking-wider">Device Preview</span>
+                        <div class="flex items-center bg-slate-100 p-1 rounded-lg gap-1">
+                            <button onclick="setDeviceView('desktop')" id="dev-btn-desktop" class="px-2 py-1 text-[11px] font-semibold rounded-md bg-white shadow-sm text-slate-800">
+                                <i class="fa-solid fa-desktop mr-1"></i> Desktop
+                            </button>
+                            <button onclick="setDeviceView('tablet')" id="dev-btn-tablet" class="px-2 py-1 text-[11px] font-semibold rounded-md text-slate-500 hover:text-slate-800">
+                                <i class="fa-solid fa-tablet-screen-button mr-1"></i> Tablet
+                            </button>
+                            <button onclick="setDeviceView('mobile')" id="dev-btn-mobile" class="px-2 py-1 text-[11px] font-semibold rounded-md text-slate-500 hover:text-slate-800">
+                                <i class="fa-solid fa-mobile-screen mr-1"></i> Mobile
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Display Frame -->
+                    <div class="bg-slate-100 rounded-2xl p-2 sm:p-4 flex items-center justify-center overflow-hidden transition-all min-h-[220px]">
+                        <div id="device-frame" class="device-desktop bg-white overflow-hidden shadow-md transition-all duration-300">
+                            <img id="modal-image" src="" alt="Preview" class="w-full h-full object-cover">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Embedded Video Tutorial Section -->
+                <div id="video-section" class="hidden space-y-2">
+                    <h4 class="text-[10px] sm:text-xs font-bold text-slate-400 uppercase tracking-wider">Video Walkthrough & Tutorial</h4>
+                    <div class="aspect-video w-full rounded-xl overflow-hidden bg-slate-900 border border-slate-200">
+                        <iframe id="modal-video-iframe" class="w-full h-full" src="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                    </div>
+                </div>
+
+                <!-- Description & Features Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
+                    <div class="md:col-span-2 space-y-2">
+                        <h4 class="text-[10px] sm:text-xs font-bold text-slate-400 uppercase tracking-wider">Product Overview</h4>
+                        <p id="modal-description" class="text-xs sm:text-sm text-slate-600 leading-relaxed whitespace-pre-line">
+                            Detailed template overview.
+                        </p>
+                    </div>
+                    <div class="bg-slate-50 p-3.5 sm:p-4 rounded-xl border border-slate-100 space-y-2.5">
+                        <h4 class="text-[10px] sm:text-xs font-bold text-slate-400 uppercase tracking-wider">What is Included</h4>
+                        <ul id="modal-features-list" class="space-y-1.5 text-xs font-medium text-slate-700">
+                            <!-- Populated dynamically -->
+                        </ul>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- CREATOR LOGIN MODAL -->
+    <div id="login-modal" class="fixed inset-0 z-50 hidden bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-sm w-full p-5 sm:p-6 shadow-2xl border border-slate-100 space-y-4">
+            <div class="text-center">
+                <div class="w-10 h-10 bg-slate-900 text-white rounded-xl flex items-center justify-center font-bold text-lg mx-auto mb-2">C</div>
+                <h3 class="text-base sm:text-lg font-bold text-slate-900">Creator Authentication</h3>
+                <p class="text-xs text-slate-500 mt-1">Enter password to manage storefront templates.</p>
+            </div>
+            <div>
+                <input type="password" id="login-password" placeholder="Enter creator password" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs sm:text-sm font-medium focus:outline-none focus:ring-2 focus:ring-slate-900">
+                <p id="login-error" class="text-xs text-rose-600 mt-1.5 hidden">Incorrect password. Please try again.</p>
+            </div>
+            <div class="flex gap-2">
+                <button onclick="closeCreatorLoginModal()" class="w-1/2 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-xl transition-all">Cancel</button>
+                <button onclick="submitCreatorLogin()" class="w-1/2 py-2.5 bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold rounded-xl transition-all">Authenticate</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ADD / EDIT PRODUCT MODAL -->
+    <div id="product-modal" class="fixed inset-0 z-50 hidden bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
+        <div class="bg-white rounded-2xl max-w-lg w-full max-h-[90vh] overflow-hidden shadow-2xl border border-slate-100 flex flex-col my-auto">
+            
+            <div class="p-4 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
+                <h3 id="product-form-title" class="font-bold text-sm sm:text-base text-slate-900">Add New Product Listing</h3>
+                <button onclick="closeProductModal()" class="w-8 h-8 rounded-full bg-white hover:bg-slate-200 text-slate-500 flex items-center justify-center">
+                    <i class="fa-solid fa-xmark text-sm"></i>
+                </button>
+            </div>
+
+            <form id="product-form" onsubmit="handleProductSubmit(event)" class="p-4 sm:p-6 overflow-y-auto space-y-3.5">
+                <input type="hidden" id="form-product-id">
+
+                <div>
+                    <label class="block text-[10px] sm:text-xs font-bold uppercase tracking-wider text-slate-500 mb-1">Product Title</label>
+                    <input type="text" id="form-title" required placeholder="e.g. Small Business Cashflow Spreadsheet" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs sm:text-sm font-medium focus:outline-none focus:ring-2 focus:ring-slate-900">
+                </div>
+
+                <div class="grid grid-cols-2 gap-2.5">
+                    <div>
+                        <label class="block text-[10px] sm:text-xs font-bold uppercase tracking-wider text-slate-500 mb-1">Price PHP (₱)</label>
+                        <input type="number" id="form-price" step="0.01" required placeholder="299.00" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs sm:text-sm font-medium focus:outline-none focus:ring-2 focus:ring-slate-900">
+                    </div>
+                    <div>
+                        <label class="block text-[10px] sm:text-xs font-bold uppercase tracking-wider text-slate-500 mb-1">Target Audience</label>
+                        <select id="form-audience" required class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs sm:text-sm font-medium focus:outline-none focus:ring-2 focus:ring-slate-900">
+                            <option value="Small Business">Small Business</option>
+                            <option value="Students">Students</option>
+                            <option value="Employees">Employees</option>
+                            <option value="Creators">Creators</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-2.5">
+                    <div>
+                        <label class="block text-[10px] sm:text-xs font-bold uppercase tracking-wider text-slate-500 mb-1">Format Type</label>
+                        <select id="form-type" required class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs sm:text-sm font-medium focus:outline-none focus:ring-2 focus:ring-slate-900">
+                            <option value="Canva Template">Canva Template</option>
+                            <option value="Spreadsheet">Spreadsheet</option>
+                            <option value="CV / Resume">CV / Resume</option>
+                            <option value="Portfolio HTML">Portfolio HTML</option>
+                            <option value="Notion Workspace">Notion Workspace</option>
+                            <option value="Social Media Kit">Social Media Kit</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-[10px] sm:text-xs font-bold uppercase tracking-wider text-slate-500 mb-1">Cover Image URL</label>
+                        <input type="url" id="form-image" required placeholder="https://..." class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs sm:text-sm font-medium focus:outline-none focus:ring-2 focus:ring-slate-900">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-[10px] sm:text-xs font-bold uppercase tracking-wider text-slate-500 mb-1">YouTube Video Walkthrough URL (Optional)</label>
+                    <input type="text" id="form-video" placeholder="https://www.youtube.com/watch?v=..." class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs sm:text-sm font-medium focus:outline-none focus:ring-2 focus:ring-slate-900">
+                </div>
+
+                <div>
+                    <label class="block text-[10px] sm:text-xs font-bold uppercase tracking-wider text-slate-500 mb-1">Buy / Checkout Link (Raket.ph / PayMongo)</label>
+                    <input type="url" id="form-link" required placeholder="https://raket.ph/..." class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs sm:text-sm font-medium focus:outline-none focus:ring-2 focus:ring-slate-900">
+                </div>
+
+                <div>
+                    <label class="block text-[10px] sm:text-xs font-bold uppercase tracking-wider text-slate-500 mb-1">Detailed Description</label>
+                    <textarea id="form-description" rows="3" required placeholder="Provide clear product details..." class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs sm:text-sm font-medium focus:outline-none focus:ring-2 focus:ring-slate-900"></textarea>
+                </div>
+
+                <div>
+                    <label class="block text-[10px] sm:text-xs font-bold uppercase tracking-wider text-slate-500 mb-1">Included Features (Comma separated)</label>
+                    <input type="text" id="form-features" placeholder="Instant Google Sheets copy, Automated Dashboard, Video tutorial" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs sm:text-sm font-medium focus:outline-none focus:ring-2 focus:ring-slate-900">
+                </div>
+
+                <div class="pt-2 flex justify-end gap-2">
+                    <button type="button" onclick="closeProductModal()" class="px-3.5 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-xl">Cancel</button>
+                    <button type="submit" class="px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold rounded-xl shadow-md">Save Listing</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // --- DEFAULT STORE SEED DATA ---
+        const DEFAULT_PRODUCTS = [
+            {
+                id: "prod-1",
+                title: "Small Business Financial Tracker & Cashflow",
+                pricePHP: 499,
+                audience: "Small Business",
+                type: "Spreadsheet",
+                image: "https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?auto=format&fit=crop&w=800&q=80",
+                videoUrl: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+                link: "https://raket.ph",
+                description: "A complete automated financial dashboard for small businesses and freelancers. Track income, expenses, pending invoices, and tax estimations automatically with real-time summary charts.",
+                features: ["Google Sheets & Excel formats", "Automated monthly dashboard", "Tax estimation calculator", "Invoice status tracker"]
+            },
+            {
+                id: "prod-2",
+                title: "Ultimate Academic Notion Workspace",
+                pricePHP: 299,
+                audience: "Students",
+                type: "Notion Workspace",
+                image: "https://images.unsplash.com/photo-1517842645767-c639042777db?auto=format&fit=crop&w=800&q=80",
+                videoUrl: "",
+                link: "https://raket.ph",
+                description: "Streamline your study workflow with an all-in-one Notion OS. Features course modules planner, assignment deadline countdown, space-repetition review system, and GPA calculator.",
+                features: ["Assignment & exam calendar", "Spaced repetition notebook", "Grade/GPA calculator", "Mobile friendly view"]
+            },
+            {
+                id: "prod-3",
+                title: "Corporate HR & Employee Onboarding Deck",
+                pricePHP: 399,
+                audience: "Employees",
+                type: "Canva Template",
+                image: "https://images.unsplash.com/photo-1542744094-3a3121699563?auto=format&fit=crop&w=800&q=80",
+                videoUrl: "",
+                link: "https://raket.ph",
+                description: "Modern, professional 30-slide presentation deck tailored for corporate onboarding, HR policies, and team alignment meetings. Fully customizable in Canva.",
+                features: ["30 custom slides", "Canva free & pro compatible", "16:9 widescreen layout", "Fully editable charts"]
+            },
+            {
+                id: "prod-4",
+                title: "Minimalist Developer & Designer Portfolio",
+                pricePHP: 599,
+                audience: "Creators",
+                type: "Portfolio HTML",
+                image: "https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?auto=format&fit=crop&w=800&q=80",
+                videoUrl: "",
+                link: "https://raket.ph",
+                description: "High-converting, ultra-fast single file HTML/Tailwind portfolio template for creators, freelancers, and developers. Easily editable with zero build tools required.",
+                features: ["Pure HTML + Tailwind CSS", "Responsive across all screens", "Dark & Light style balance", "SEO optimized structure"]
+            },
+            {
+                id: "prod-5",
+                title: "Modern Executive CV & Resume Package",
+                pricePHP: 249,
+                audience: "Employees",
+                type: "CV / Resume",
+                image: "https://images.unsplash.com/photo-1586281380349-632531db7ed4?auto=format&fit=crop&w=800&q=80",
+                videoUrl: "",
+                link: "https://raket.ph",
+                description: "ATS-friendly resume templates designed to stand out to recruiters while passing applicant tracking systems. Includes matching cover letter and references page.",
+                features: ["Word & Google Docs format", "ATS scanner compatible", "Matching cover letter", "Font download guide"]
+            },
+            {
+                id: "prod-6",
+                title: "Social Media Branding & Content Planner",
+                pricePHP: 349,
+                audience: "Creators",
+                type: "Social Media Kit",
+                image: "https://images.unsplash.com/photo-1611162617474-5b21e879e113?auto=format&fit=crop&w=800&q=80",
+                videoUrl: "",
+                link: "https://raket.ph",
+                description: "50+ editable Canva social media graphics including Instagram carousels, stories, and LinkedIn banners paired with a 30-day content strategy calendar.",
+                features: ["50 Canva graphic templates", "30-day content calendar", "Caption ideas library", "Color palette guide"]
+            }
+        ];
+
+        // --- CURRENCY CONVERSION TABLES ---
+        const CURRENCY_DATA = {
+            PHP: { rate: 1.0, symbol: '₱' },
+            USD: { rate: 0.018, symbol: '$' },
+            SGD: { rate: 0.024, symbol: 'S$' },
+            MYR: { rate: 0.078, symbol: 'RM' },
+            IDR: { rate: 280.0, symbol: 'Rp' },
+            THB: { rate: 0.62, symbol: '฿' },
+            VND: { rate: 440.0, symbol: '₫' },
+            EUR: { rate: 0.016, symbol: '€' },
+            GBP: { rate: 0.014, symbol: '£' },
+            AUD: { rate: 0.027, symbol: 'A$' },
+            JPY: { rate: 2.70, symbol: '¥' }
+        };
+
+        // --- GLOBAL APP STATE ---
+        let products = [];
+        let currentCurrency = 'PHP';
+        let isCreatorMode = false;
+        let activeAudienceFilter = 'all';
+        let activeTypeFilter = 'all';
+        let searchQuery = '';
+        let logoClickCounter = 0;
+        let logoClickTimer = null;
+
+        // --- INITIALIZATION ---
+        window.addEventListener('DOMContentLoaded', () => {
+            loadProducts();
+            detectGeoCurrency();
+            renderProducts();
+        });
+
+        function loadProducts() {
+            const stored = localStorage.getItem('cheemscraft_products');
+            if (stored) {
+                try {
+                    products = JSON.parse(stored);
+                } catch (e) {
+                    products = [...DEFAULT_PRODUCTS];
+                }
+            } else {
+                products = [...DEFAULT_PRODUCTS];
+            }
+        }
+
+        function saveProducts() {
+            localStorage.setItem('cheemscraft_products', JSON.stringify(products));
+        }
+
+        // --- AUTOMATED GEOLOCATION CURRENCY ---
+        async function detectGeoCurrency() {
+            try {
+                const res = await fetch('https://ipapi.co/json/');
+                if (res.ok) {
+                    const data = await res.json();
+                    const code = data.currency;
+                    if (code && CURRENCY_DATA[code]) {
+                        currentCurrency = code;
+                        document.getElementById('currency-select').value = code;
+                        updateCurrencyIndicator();
+                    }
+                }
+            } catch (e) {
+                console.log('IP Geolocation fallback initialized.');
+            }
+        }
+
+        function changeCurrency(code) {
+            if (CURRENCY_DATA[code]) {
+                currentCurrency = code;
+                updateCurrencyIndicator();
+                renderProducts();
+            }
+        }
+
+        function updateCurrencyIndicator() {
+            const sym = CURRENCY_DATA[currentCurrency].symbol;
+            document.getElementById('active-currency-indicator').textContent = `Prices converted to ${currentCurrency} (${sym})`;
+        }
+
+        function formatPrice(pricePHP) {
+            const curr = CURRENCY_DATA[currentCurrency] || CURRENCY_DATA['PHP'];
+            const converted = pricePHP * curr.rate;
+            if (currentCurrency === 'IDR' || currentCurrency === 'VND') {
+                return `${curr.symbol} ${Math.round(converted).toLocaleString()}`;
+            }
+            return `${curr.symbol} ${converted.toFixed(2)}`;
+        }
+
+        // --- RENDER SHOP GRID ---
+        function renderProducts() {
+            const grid = document.getElementById('product-grid');
+            const emptyState = document.getElementById('empty-state');
+            grid.innerHTML = '';
+
+            const filtered = products.filter(p => {
+                const matchesAudience = activeAudienceFilter === 'all' || p.audience === activeAudienceFilter;
+                const matchesType = activeTypeFilter === 'all' || p.type === activeTypeFilter;
+                const matchesSearch = searchQuery === '' || 
+                    p.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
+                    p.description.toLowerCase().includes(searchQuery.toLowerCase());
+                return matchesAudience && matchesType && matchesSearch;
+            });
+
+            document.getElementById('product-count-label').textContent = `Available Products (${filtered.length})`;
+
+            if (filtered.length === 0) {
+                emptyState.classList.remove('hidden');
+                grid.classList.add('hidden');
+                return;
+            }
+
+            emptyState.classList.add('hidden');
+            grid.classList.remove('hidden');
+
+            filtered.forEach(p => {
+                const card = document.createElement('div');
+                card.className = "group bg-white rounded-2xl border border-slate-200/80 hover:border-slate-300 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col overflow-hidden relative";
+
+                card.innerHTML = `
+                    <div class="relative aspect-[16/10] overflow-hidden bg-slate-100">
+                        <img src="${p.image}" alt="${p.title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" onerror="this.src='https://placehold.co/800x500/f1f5f9/475569?text=Template+Preview'">
+                        <div class="absolute top-2.5 left-2.5 flex flex-wrap gap-1.5">
+                            <span class="px-2.5 py-0.5 rounded-full text-[10px] sm:text-[11px] font-semibold bg-white/90 backdrop-blur-md text-slate-800 shadow-sm">
+                                ${p.type}
+                            </span>
+                        </div>
+                        ${isCreatorMode ? `
+                            <div class="absolute top-2.5 right-2.5 flex gap-1 bg-white/90 backdrop-blur-md p-1 rounded-lg shadow-md">
+                                <button onclick="event.stopPropagation(); editProduct('${p.id}')" class="w-7 h-7 rounded bg-slate-100 hover:bg-slate-200 text-slate-700 flex items-center justify-center text-xs" title="Edit Listing">
+                                    <i class="fa-solid fa-pen"></i>
+                                </button>
+                                <button onclick="event.stopPropagation(); deleteProduct('${p.id}')" class="w-7 h-7 rounded bg-rose-100 hover:bg-rose-200 text-rose-700 flex items-center justify-center text-xs" title="Delete Listing">
+                                    <i class="fa-solid fa-trash"></i>
+                                </button>
+                            </div>
+                        ` : ''}
+                    </div>
+
+                    <div class="p-4 sm:p-5 flex-1 flex flex-col justify-between space-y-3 sm:space-y-4">
+                        <div class="space-y-1.5 sm:space-y-2">
+                            <div class="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-slate-400">
+                                Target: ${p.audience}
+                            </div>
+                            <h3 class="font-bold text-slate-900 text-sm sm:text-base leading-snug group-hover:text-brand-600 transition-colors line-clamp-2">
+                                ${p.title}
+                            </h3>
+                            <p class="text-xs text-slate-500 line-clamp-2 leading-relaxed">
+                                ${p.description}
+                            </p>
+                        </div>
+
+                        <div class="pt-2 border-t border-slate-100 flex items-center justify-between">
+                            <div>
+                                <span class="text-[10px] sm:text-xs text-slate-400 block leading-none">Price</span>
+                                <span class="text-base sm:text-lg font-extrabold text-slate-900 mt-0.5 block">${formatPrice(p.pricePHP)}</span>
+                            </div>
+                            <button onclick="openDetailModal('${p.id}')" class="px-3 sm:px-3.5 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-semibold text-xs transition-all shadow-sm flex items-center gap-1.5">
+                                View Details
+                            </button>
+                        </div>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        // --- CATEGORY & SEARCH FILTERS ---
+        function setAudienceFilter(audience) {
+            activeAudienceFilter = audience;
+            document.querySelectorAll('.audience-btn').forEach(btn => {
+                if (btn.dataset.audience === audience) {
+                    btn.className = "audience-btn active-audience-btn whitespace-nowrap px-3 py-1.5 text-xs font-semibold rounded-lg border transition-all bg-slate-900 text-white border-slate-900 shadow-sm flex-shrink-0";
+                } else {
+                    btn.className = "audience-btn whitespace-nowrap px-3 py-1.5 text-xs font-semibold rounded-lg border bg-white text-slate-700 border-slate-200 hover:border-slate-300 transition-all shadow-sm flex-shrink-0";
+                }
+            });
+            renderProducts();
+        }
+
+        function setTypeFilter(type) {
+            activeTypeFilter = type;
+            document.querySelectorAll('.type-btn').forEach(btn => {
+                if (btn.dataset.type === type) {
+                    btn.className = "type-btn active-type-btn whitespace-nowrap px-3 py-1.5 text-xs font-medium rounded-lg border transition-all bg-slate-200 text-slate-800 border-slate-300 flex-shrink-0";
+                } else {
+                    btn.className = "type-btn whitespace-nowrap px-3 py-1.5 text-xs font-medium rounded-lg border bg-white text-slate-600 border-slate-200 hover:bg-slate-100 transition-all flex-shrink-0";
+                }
+            });
+            renderProducts();
+        }
+
+        function handleSearch(val) {
+            searchQuery = val;
+            renderProducts();
+        }
+
+        function resetFilters() {
+            activeAudienceFilter = 'all';
+            activeTypeFilter = 'all';
+            searchQuery = '';
+            document.getElementById('search-input').value = '';
+            setAudienceFilter('all');
+            setTypeFilter('all');
+        }
+
+        // --- PREVIEW MODAL & DEVICE PREVIEWER ---
+        function openDetailModal(id) {
+            const p = products.find(item => item.id === id);
+            if (!p) return;
+
+            document.getElementById('modal-title').textContent = p.title;
+            document.getElementById('modal-price').textContent = formatPrice(p.pricePHP);
+            document.getElementById('modal-type-badge').textContent = p.type;
+            document.getElementById('modal-audience-badge').textContent = p.audience;
+            document.getElementById('modal-description').textContent = p.description;
+            document.getElementById('modal-image').src = p.image;
+            document.getElementById('modal-checkout-btn').href = p.link || "#";
+
+            const featuresList = document.getElementById('modal-features-list');
+            featuresList.innerHTML = '';
+            if (p.features && p.features.length > 0) {
+                p.features.forEach(feat => {
+                    const li = document.createElement('li');
+                    li.className = "flex items-start gap-1.5";
+                    li.innerHTML = `<i class="fa-solid fa-check text-emerald-600 text-xs mt-0.5"></i><span>${feat}</span>`;
+                    featuresList.appendChild(li);
+                });
+            } else {
+                featuresList.innerHTML = '<li class="text-slate-400">Standard template files included.</li>';
+            }
+
+            const videoSec = document.getElementById('video-section');
+            const iframe = document.getElementById('modal-video-iframe');
+            if (p.videoUrl) {
+                const embedUrl = convertToEmbedUrl(p.videoUrl);
+                if (embedUrl) {
+                    iframe.src = embedUrl;
+                    videoSec.classList.remove('hidden');
+                } else {
+                    videoSec.classList.add('hidden');
+                }
+            } else {
+                videoSec.classList.add('hidden');
+                iframe.src = '';
+            }
+
+            setDeviceView('desktop');
+            document.getElementById('detail-modal').classList.remove('hidden');
+        }
+
+        function closeDetailModal() {
+            document.getElementById('detail-modal').classList.add('hidden');
+            document.getElementById('modal-video-iframe').src = '';
+        }
+
+        function setDeviceView(device) {
+            const frame = document.getElementById('device-frame');
+            const btnDesk = document.getElementById('dev-btn-desktop');
+            const btnTab = document.getElementById('dev-btn-tablet');
+            const btnMob = document.getElementById('dev-btn-mobile');
+
+            [btnDesk, btnTab, btnMob].forEach(b => {
+                b.className = "px-2 py-1 text-[11px] font-semibold rounded-md text-slate-500 hover:text-slate-800";
+            });
+
+            if (device === 'desktop') {
+                frame.className = "device-desktop bg-white overflow-hidden shadow-md transition-all duration-300";
+                btnDesk.className = "px-2 py-1 text-[11px] font-semibold rounded-md bg-white shadow-sm text-slate-800";
+            } else if (device === 'tablet') {
+                frame.className = "device-tablet bg-white overflow-hidden shadow-md transition-all duration-300";
+                btnTab.className = "px-2 py-1 text-[11px] font-semibold rounded-md bg-white shadow-sm text-slate-800";
+            } else if (device === 'mobile') {
+                frame.className = "device-mobile bg-white overflow-hidden shadow-md transition-all duration-300";
+                btnMob.className = "px-2 py-1 text-[11px] font-semibold rounded-md bg-white shadow-sm text-slate-800";
+            }
+        }
+
+        function convertToEmbedUrl(url) {
+            if (!url) return '';
+            if (url.includes('youtube.com/embed/')) return url;
+            const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+            const match = url.match(regExp);
+            return (match && match[2].length === 11) ? `https://www.youtube.com/embed/${match[2]}` : '';
+        }
+
+        // --- SECRET CREATOR MODE ---
+        function handleLogoClick() {
+            logoClickCounter++;
+            if (logoClickTimer) clearTimeout(logoClickTimer);
+            logoClickTimer = setTimeout(() => { logoClickCounter = 0; }, 1500);
+
+            if (logoClickCounter >= 3) {
+                logoClickCounter = 0;
+                openCreatorLoginModal();
+            }
+        }
+
+        function openCreatorLoginModal() {
+            if (isCreatorMode) {
+                alert('Creator mode is already enabled.');
+                return;
+            }
+            document.getElementById('login-password').value = '';
+            document.getElementById('login-error').classList.add('hidden');
+            document.getElementById('login-modal').classList.remove('hidden');
+        }
+
+        function closeCreatorLoginModal() {
+            document.getElementById('login-modal').classList.add('hidden');
+        }
+
+        function submitCreatorLogin() {
+            const pass = document.getElementById('login-password').value;
+            if (pass === 'Rex61103!') {
+                isCreatorMode = true;
+                closeCreatorLoginModal();
+                updateCreatorUI();
+                renderProducts();
+            } else {
+                document.getElementById('login-error').classList.remove('hidden');
+            }
+        }
+
+        function updateCreatorUI() {
+            const badge = document.getElementById('creator-badge');
+            const controls = document.getElementById('creator-controls');
+            const toggleBtn = document.getElementById('admin-toggle-btn');
+
+            if (isCreatorMode) {
+                badge.classList.remove('hidden');
+                controls.classList.remove('hidden');
+                toggleBtn.textContent = "creator active";
+                toggleBtn.className = "text-[10px] text-amber-600 font-semibold focus:outline-none";
+            } else {
+                badge.classList.add('hidden');
+                controls.classList.add('hidden');
+                toggleBtn.textContent = "creator portal";
+                toggleBtn.className = "text-[10px] text-slate-300 hover:text-slate-500 transition-colors focus:outline-none opacity-60 hover:opacity-100";
+            }
+        }
+
+        function exitCreatorMode() {
+            isCreatorMode = false;
+            updateCreatorUI();
+            renderProducts();
+        }
+
+        // --- PRODUCT CRUD CMS ---
+        function openProductModal(editId = null) {
+            const form = document.getElementById('product-form');
+            form.reset();
+
+            if (editId) {
+                const p = products.find(item => item.id === editId);
+                if (p) {
+                    document.getElementById('product-form-title').textContent = "Edit Product Listing";
+                    document.getElementById('form-product-id').value = p.id;
+                    document.getElementById('form-title').value = p.title;
+                    document.getElementById('form-price').value = p.pricePHP;
+                    document.getElementById('form-audience').value = p.audience;
+                    document.getElementById('form-type').value = p.type;
+                    document.getElementById('form-image').value = p.image;
+                    document.getElementById('form-video').value = p.videoUrl || '';
+                    document.getElementById('form-link').value = p.link || '';
+                    document.getElementById('form-description').value = p.description;
+                    document.getElementById('form-features').value = (p.features || []).join(', ');
+                }
+            } else {
+                document.getElementById('product-form-title').textContent = "Add New Product Listing";
+                document.getElementById('form-product-id').value = '';
+            }
+
+            document.getElementById('product-modal').classList.remove('hidden');
+        }
+
+        function closeProductModal() {
+            document.getElementById('product-modal').classList.add('hidden');
+        }
+
+        function handleProductSubmit(e) {
+            e.preventDefault();
+            const editId = document.getElementById('form-product-id').value;
+
+            const title = document.getElementById('form-title').value.trim();
+            const pricePHP = parseFloat(document.getElementById('form-price').value) || 0;
+            const audience = document.getElementById('form-audience').value;
+            const type = document.getElementById('form-type').value;
+            const image = document.getElementById('form-image').value.trim();
+            const videoUrl = document.getElementById('form-video').value.trim();
+            const link = document.getElementById('form-link').value.trim();
+            const description = document.getElementById('form-description').value.trim();
+            const featuresRaw = document.getElementById('form-features').value;
+            const features = featuresRaw ? featuresRaw.split(',').map(s => s.trim()).filter(Boolean) : [];
+
+            if (editId) {
+                const index = products.findIndex(p => p.id === editId);
+                if (index !== -1) {
+                    products[index] = { id: editId, title, pricePHP, audience, type, image, videoUrl, link, description, features };
+                }
+            } else {
+                const newProd = {
+                    id: 'prod-' + Date.now(),
+                    title,
+                    pricePHP,
+                    audience,
+                    type,
+                    image,
+                    videoUrl,
+                    link,
+                    description,
+                    features
+                };
+                products.unshift(newProd);
+            }
+
+            saveProducts();
+            renderProducts();
+            closeProductModal();
+        }
+
+        function editProduct(id) {
+            openProductModal(id);
+        }
+
+        function deleteProduct(id) {
+            if (confirm("Are you sure you want to delete this template listing?")) {
+                products = products.filter(p => p.id !== id);
+                saveProducts();
+                renderProducts();
+            }
+        }
+
+        // --- HARDCODED HTML EXPORT ---
+        function exportBakedHTML() {
+            let fullHtml = document.documentElement.outerHTML;
+            const jsonString = JSON.stringify(products, null, 4);
+            const seedRegex = /const DEFAULT_PRODUCTS = \[[\s\S]*?\];/;
+            
+            fullHtml = fullHtml.replace(seedRegex, `const DEFAULT_PRODUCTS = ${jsonString};`);
+
+            const blob = new Blob([fullHtml], { type: 'text/html' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'index.html';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+    </script>
+</body>
+</html>

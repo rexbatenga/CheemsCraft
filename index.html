@@ -64,6 +64,10 @@
                 <button onclick="openProductModal()" class="bg-white text-gray-900 hover:bg-gray-100 px-3 py-1.5 rounded-lg text-xs font-bold transition shadow-sm">
                     + Add New Template
                 </button>
+                <button onclick="openOrdersDashboardModal()" class="bg-rose-600 hover:bg-rose-700 text-white px-3 py-1.5 rounded-lg text-xs font-bold transition shadow-sm flex items-center gap-1.5">
+                    <span>Orders Dashboard</span>
+                    <span id="pending-orders-count" class="hidden bg-white text-rose-700 px-1.5 py-0.5 rounded-full text-[10px] font-black">0</span>
+                </button>
                 <button onclick="openFirebaseConfigModal()" class="bg-gray-800 hover:bg-gray-700 text-gray-200 px-3 py-1.5 rounded-lg text-xs font-semibold transition border border-gray-700">
                     Firebase Setup
                 </button>
@@ -71,7 +75,7 @@
                     Export HTML
                 </button>
                 <button onclick="toggleCreatorMode(false)" class="text-gray-400 hover:text-white px-2 py-1 text-xs font-semibold">
-                    Exit Creator
+                    Exit Creator Mode
                 </button>
             </div>
         </div>
@@ -81,7 +85,7 @@
     <header class="border-b border-gray-100 bg-white/90 backdrop-blur-md sticky top-0 z-40">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between gap-4">
             
-            <!-- Branding: Logo Image & Title (Triple-click trigger) -->
+            <!-- Branding: Logo Image & Title (Triple-click trigger for Creator Mode) -->
             <div class="flex items-center space-x-3 cursor-pointer group select-none" id="brand-logo-trigger" onclick="handleLogoClick()">
                 <img src="Cc logo.png" alt="CheemsCraft Logo" class="h-10 w-auto object-contain transition-transform group-hover:scale-105" onerror="this.style.display='none'; document.getElementById('fallback-logo-icon').style.display='flex'">
                 <div id="fallback-logo-icon" class="hidden h-10 w-10 bg-gray-900 text-white font-bold text-lg items-center justify-center rounded-xl">Cc</div>
@@ -258,18 +262,106 @@
 
             <div class="p-6 bg-gray-50 border-t border-gray-100 flex items-center justify-between sticky bottom-0 z-10">
                 <div>
-                    <span class="text-xs text-gray-400 font-medium block">Instant Direct Download</span>
+                    <span class="text-xs text-gray-400 font-medium block">Instant Direct Access</span>
                     <span id="modal-price" class="text-2xl font-black text-gray-900">0.00</span>
                 </div>
-                <a id="modal-buy-link" href="#" target="_blank" rel="noopener" class="bg-gray-900 hover:bg-gray-800 text-white font-semibold text-sm px-6 py-3 rounded-xl transition shadow-md hover:shadow-lg flex items-center gap-2">
-                    <span>Purchase Template</span>
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
-                </a>
+                <div id="modal-action-container">
+                    <!-- Buy or Local GCash Checkout Button dynamically rendered -->
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- 3. Add / Edit Template Modal (With Custom Base64 Upload, Aspect Ratio & Object Fit Controls) -->
+    <!-- 3. Local GCash Payment Checkout Modal with Mandatory Email/FB Delivery Notice -->
+    <div id="gcash-checkout-modal" class="fixed inset-0 z-50 bg-gray-900/60 backdrop-blur-sm hidden flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
+        <div class="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl my-auto max-h-[92vh] overflow-y-auto border border-gray-100 flex flex-col">
+            <div class="flex items-center justify-between border-b border-gray-100 pb-3 mb-4">
+                <div class="flex items-center space-x-2">
+                    <span class="w-2.5 h-2.5 bg-emerald-500 rounded-full animate-pulse"></span>
+                    <h3 class="text-base font-bold text-gray-900">Local GCash Direct Checkout</h3>
+                </div>
+                <button onclick="closeGcashModal()" class="text-gray-400 hover:text-gray-600 p-1">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+            </div>
+
+            <!-- Prominent Customer Notice for Delivery -->
+            <div class="bg-rose-50 border border-rose-200 rounded-2xl p-3.5 mb-5 text-xs text-rose-900 flex items-start space-x-2.5">
+                <svg class="w-5 h-5 text-rose-500 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                <div class="space-y-1">
+                    <p class="font-bold">Fulfillment Notice:</p>
+                    <p class="leading-relaxed">Your digital product file or access link will be sent directly to your provided Email Address or Facebook Messenger upon payment verification.</p>
+                </div>
+            </div>
+
+            <div class="space-y-4 text-xs">
+                <!-- Selected Product Summary -->
+                <div class="bg-gray-50 p-3 rounded-2xl border border-gray-100 flex items-center justify-between">
+                    <div>
+                        <span class="text-[10px] uppercase font-bold text-gray-400">Ordering Item</span>
+                        <h4 id="gcash-item-title" class="font-bold text-gray-900 text-sm">Template Name</h4>
+                    </div>
+                    <div class="text-right">
+                        <span class="text-[10px] uppercase font-bold text-gray-400">Total Price</span>
+                        <p id="gcash-item-price" class="text-base font-black text-rose-600">PHP 0.00</p>
+                    </div>
+                </div>
+
+                <!-- GCash Payment Info & QR -->
+                <div class="border border-gray-200 rounded-2xl p-4 bg-gray-50/50 flex flex-col items-center text-center space-y-3">
+                    <p class="font-bold text-gray-800">Scan GCash QR or Transfer Direct</p>
+                    <div class="w-48 h-48 bg-gray-200 rounded-xl overflow-hidden border border-gray-300 shadow-inner flex items-center justify-center">
+                        <img src="GcashQR.jpg" alt="GCash QR Code" class="w-full h-full object-contain" onerror="this.style.display='none'; document.getElementById('qr-fallback').classList.remove('hidden')">
+                        <div id="qr-fallback" class="hidden p-4 text-[11px] text-gray-500 font-medium">Scan GcashQR.jpg Code Here</div>
+                    </div>
+
+                    <div class="w-full text-left space-y-1 text-[11px] text-gray-600 bg-white p-3 rounded-xl border border-gray-100">
+                        <p><span class="font-bold text-gray-800">GCash / Phone:</span> +63 9271102152</p>
+                        <p><span class="font-bold text-gray-800">Contact Email:</span> rbrbatenga@gmail.com</p>
+                        <p><span class="font-bold text-gray-800">Facebook Profile:</span> <a href="https://www.facebook.com/rex.renaciabatenga" target="_blank" class="text-rose-600 underline">rex.renaciabatenga</a></p>
+                    </div>
+                </div>
+
+                <!-- Buyer Info Form -->
+                <form id="gcash-order-form" onsubmit="handleGcashOrderSubmit(event)" class="space-y-3">
+                    <input type="hidden" id="gcash-product-id">
+                    
+                    <div>
+                        <label class="block font-bold text-gray-700 mb-1">Your Full Name *</label>
+                        <input type="text" id="buyer-name" required placeholder="e.g. Juan Dela Cruz" class="w-full border border-gray-200 rounded-xl p-2.5 text-xs focus:outline-none focus:ring-2 focus:ring-rose-200">
+                    </div>
+
+                    <div>
+                        <label class="block font-bold text-gray-700 mb-1">Email Address (For Product Delivery) *</label>
+                        <input type="email" id="buyer-email" required placeholder="name@domain.com" class="w-full border border-gray-200 rounded-xl p-2.5 text-xs focus:outline-none focus:ring-2 focus:ring-rose-200">
+                    </div>
+
+                    <div>
+                        <label class="block font-bold text-gray-700 mb-1">Facebook Messenger / Profile Link (Optional)</label>
+                        <input type="text" id="buyer-fb" placeholder="https://facebook.com/yourprofile or your FB Name" class="w-full border border-gray-200 rounded-xl p-2.5 text-xs focus:outline-none focus:ring-2 focus:ring-rose-200">
+                    </div>
+
+                    <div>
+                        <label class="block font-bold text-gray-700 mb-1">Upload GCash Payment Screenshot / Proof *</label>
+                        <input type="file" id="buyer-receipt-file" accept="image/*" required onchange="handleReceiptUpload(event)" class="w-full text-xs text-gray-500 file:mr-3 file:py-2 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-gray-900 file:text-white hover:file:bg-gray-800 cursor-pointer">
+                        <input type="hidden" id="buyer-receipt-data">
+                        
+                        <div id="receipt-preview-box" class="hidden mt-2 p-1 bg-gray-100 rounded-xl border border-gray-200">
+                            <img id="receipt-preview-img" src="" class="h-24 w-auto object-contain mx-auto rounded-lg">
+                        </div>
+                    </div>
+
+                    <div class="pt-2">
+                        <button type="submit" id="submit-order-btn" class="w-full bg-gray-900 hover:bg-gray-800 text-white font-bold py-3 rounded-xl transition shadow-md flex items-center justify-center gap-2">
+                            <span>Submit Order & Send Payment Proof</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- 4. Add / Edit Template Modal -->
     <div id="creator-modal" class="fixed inset-0 z-50 bg-gray-900/60 backdrop-blur-sm hidden flex items-center justify-center p-4 overflow-y-auto">
         <div class="bg-white rounded-3xl max-w-xl w-full p-6 shadow-2xl my-auto max-h-[90vh] overflow-y-auto">
             <div class="flex items-center justify-between border-b border-gray-100 pb-3 mb-4">
@@ -328,9 +420,30 @@
                     </div>
                 </div>
 
-                <div>
-                    <label class="block font-bold text-gray-700 mb-1">Download / Purchase Link *</label>
-                    <input type="url" id="form-checkout" required class="w-full border border-gray-200 rounded-xl p-2.5 focus:outline-none focus:ring-2 focus:ring-rose-200" placeholder="https://raket.ph/youritem">
+                <!-- Dual Listing Method Selection -->
+                <div class="bg-gray-50 p-3.5 rounded-2xl border border-gray-200/80 space-y-3">
+                    <label class="block font-bold text-gray-800">Checkout & Fulfillment Type *</label>
+                    <div class="grid grid-cols-2 gap-3">
+                        <label class="flex items-start space-x-2 border border-gray-200 p-2.5 rounded-xl bg-white cursor-pointer hover:border-rose-300">
+                            <input type="radio" name="form-listing-type" value="raket" checked onchange="toggleListingFields()" class="mt-0.5 text-rose-500">
+                            <div>
+                                <span class="font-bold text-gray-800 block">Raket.ph Link</span>
+                                <span class="text-[10px] text-gray-400">Redirects to external store</span>
+                            </div>
+                        </label>
+                        <label class="flex items-start space-x-2 border border-gray-200 p-2.5 rounded-xl bg-white cursor-pointer hover:border-rose-300">
+                            <input type="radio" name="form-listing-type" value="local" onchange="toggleListingFields()" class="mt-0.5 text-rose-500">
+                            <div>
+                                <span class="font-bold text-gray-800 block">Local GCash</span>
+                                <span class="text-[10px] text-gray-400">Direct QR + Screenshot Upload</span>
+                            </div>
+                        </label>
+                    </div>
+
+                    <div id="field-raket-url">
+                        <label class="block font-semibold text-gray-700 mb-1">Raket.ph URL *</label>
+                        <input type="url" id="form-checkout" class="w-full border border-gray-200 rounded-xl p-2.5 focus:outline-none focus:ring-2 focus:ring-rose-200" placeholder="https://raket.ph/youritem">
+                    </div>
                 </div>
 
                 <!-- Thumbnail Image File Upload and Base64 Converter -->
@@ -344,7 +457,6 @@
                         <input type="file" id="form-image-file" accept="image/*" onchange="handleImageFileUpload(event)" class="w-full text-xs text-gray-500 file:mr-3 file:py-2 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-gray-900 file:text-white hover:file:bg-gray-800 cursor-pointer">
                     </div>
 
-                    <!-- Hidden field to hold current base64 or URL -->
                     <input type="hidden" id="form-image-data">
 
                     <!-- Sizing and Formatting Controls -->
@@ -394,7 +506,41 @@
         </div>
     </div>
 
-    <!-- 4. Firebase Configuration Modal -->
+    <!-- 5. Orders Dashboard Modal (Creator Admin) -->
+    <div id="orders-dashboard-modal" class="fixed inset-0 z-50 bg-gray-900/60 backdrop-blur-sm hidden flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
+        <div class="bg-white rounded-3xl max-w-5xl w-full p-6 shadow-2xl my-auto max-h-[92vh] flex flex-col border border-gray-100">
+            <div class="flex items-center justify-between border-b border-gray-100 pb-3 mb-4">
+                <div class="flex items-center space-x-2">
+                    <span class="w-3 h-3 bg-rose-500 rounded-full"></span>
+                    <h3 class="text-lg font-bold text-gray-900">Incoming GCash Orders & Fulfillment</h3>
+                </div>
+                <button onclick="closeOrdersDashboardModal()" class="text-gray-400 hover:text-gray-600 p-1">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+            </div>
+
+            <div class="overflow-y-auto flex-grow space-y-4">
+                <div id="orders-list-container">
+                    <!-- Orders dynamically listed here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 6. Receipt Image Viewer Modal -->
+    <div id="receipt-modal" class="fixed inset-0 z-50 bg-gray-900/80 backdrop-blur-md hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-lg w-full p-4 shadow-2xl relative flex flex-col items-center">
+            <button onclick="closeReceiptModal()" class="absolute top-3 right-3 bg-gray-100 hover:bg-gray-200 text-gray-700 p-2 rounded-full">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+            <h4 class="font-bold text-gray-900 text-sm mb-3">Payment Receipt Screenshot</h4>
+            <div class="max-h-[75vh] overflow-y-auto w-full flex items-center justify-center rounded-xl bg-gray-100 p-2 border border-gray-200">
+                <img id="receipt-modal-img" src="" alt="Proof of Payment" class="max-w-full h-auto rounded-lg">
+            </div>
+        </div>
+    </div>
+
+    <!-- 7. Firebase Configuration Modal -->
     <div id="firebase-config-modal" class="fixed inset-0 z-50 bg-gray-900/60 backdrop-blur-sm hidden flex items-center justify-center p-4">
         <div class="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl border border-gray-100">
             <div class="flex items-center justify-between border-b border-gray-100 pb-3 mb-4">
@@ -445,7 +591,7 @@
             measurementId: "G-F2SRGK1G3D"
         };
 
-        // Inventory Data Backup / Initial Default Catalog
+        // Default Catalog Items
         let products = [
             {
                 id: "item-1",
@@ -453,6 +599,7 @@
                 platform: "Spreadsheet",
                 audiences: ["business"],
                 price: 299,
+                listingType: "local",
                 image: "https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?auto=format&fit=crop&w=800&q=80",
                 aspectRatio: "aspect-4-3",
                 objectFit: "object-cover",
@@ -466,6 +613,7 @@
                 platform: "Portfolio HTML",
                 audiences: ["creators", "employees"],
                 price: 499,
+                listingType: "raket",
                 image: "https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?auto=format&fit=crop&w=800&q=80",
                 aspectRatio: "aspect-16-9",
                 objectFit: "object-cover",
@@ -479,6 +627,7 @@
                 platform: "Notion System",
                 audiences: ["students"],
                 price: 199,
+                listingType: "local",
                 image: "https://images.unsplash.com/photo-1517842645767-c639042777db?auto=format&fit=crop&w=800&q=80",
                 aspectRatio: "aspect-4-3",
                 objectFit: "object-cover",
@@ -487,6 +636,8 @@
                 checkout: "https://raket.ph"
             }
         ];
+
+        let orders = [];
 
         let db = null;
         let isFirebaseConnected = false;
@@ -511,6 +662,7 @@
             detectGeoCurrency();
             if (!isFirebaseConnected) {
                 loadLocalProducts();
+                loadLocalOrders();
                 renderStorefront();
             }
         });
@@ -525,7 +677,7 @@
                 isFirebaseConnected = true;
                 updateCMSStatus(true, "Firebase Cloud Sync Active");
                 
-                // Real-time listener for Firestore "templates" collection
+                // Firestore "templates" listener
                 db.collection('templates').onSnapshot(snapshot => {
                     const fetched = [];
                     snapshot.forEach(doc => {
@@ -537,17 +689,30 @@
                     }
                     renderStorefront();
                 }, err => {
-                    console.warn("Firestore listener error, falling back to local memory:", err);
+                    console.warn("Firestore templates error, fallback to local:", err);
                     isFirebaseConnected = false;
                     updateCMSStatus(false, "Local Offline Storage Mode");
                     loadLocalProducts();
                     renderStorefront();
                 });
+
+                // Firestore "orders" listener
+                db.collection('orders').onSnapshot(snapshot => {
+                    const fetchedOrders = [];
+                    snapshot.forEach(doc => {
+                        fetchedOrders.push({ id: doc.id, ...doc.data() });
+                    });
+                    orders = fetchedOrders;
+                    saveLocalOrders();
+                    updatePendingOrdersBadge();
+                });
+
             } catch(e) {
                 console.error("Firebase Initialization Error:", e);
                 isFirebaseConnected = false;
                 updateCMSStatus(false, "Local Offline Storage Mode");
                 loadLocalProducts();
+                loadLocalOrders();
                 renderStorefront();
             }
         }
@@ -574,6 +739,32 @@
 
         function saveLocalProducts() {
             localStorage.setItem('cheemscraft_products', JSON.stringify(products));
+        }
+
+        function loadLocalOrders() {
+            const saved = localStorage.getItem('cheemscraft_orders');
+            if (saved) {
+                try { 
+                    orders = JSON.parse(saved); 
+                    updatePendingOrdersBadge();
+                } catch(e) {}
+            }
+        }
+
+        function saveLocalOrders() {
+            localStorage.setItem('cheemscraft_orders', JSON.stringify(orders));
+        }
+
+        function updatePendingOrdersBadge() {
+            const badge = document.getElementById('pending-orders-count');
+            if (!badge) return;
+            const pending = orders.filter(o => o.status === 'Pending').length;
+            if (pending > 0) {
+                badge.textContent = pending;
+                badge.classList.remove('hidden');
+            } else {
+                badge.classList.add('hidden');
+            }
         }
 
         async function detectGeoCurrency() {
@@ -611,7 +802,7 @@
             return `${symbol}${converted.toFixed(2)}`;
         }
 
-        // Header logo click handler (Triple-click triggers password modal)
+        // Header logo triple-click trigger
         function handleLogoClick() {
             logoClickCount++;
             if (logoClickCount >= 3) {
@@ -704,12 +895,18 @@
 
                 const aspectCls = p.aspectRatio || "aspect-4-3";
                 const fitCls = p.objectFit || "object-cover";
+                const isLocal = p.listingType === 'local';
+
+                const buyBtnAction = isLocal ? 
+                    `openGcashModal('${p.id}')` : 
+                    `window.open('${p.checkout}', '_blank')`;
 
                 card.innerHTML = `
                     <div class="relative w-full ${aspectCls} bg-gray-900 overflow-hidden cursor-pointer flex items-center justify-center" onclick="openPreviewModal('${p.id}')">
                         <img src="${p.image}" alt="${p.title}" class="w-full h-full ${fitCls} group-hover:scale-105 transition-transform duration-500" onerror="this.src='https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=800&q=80'">
                         <div class="absolute top-3 left-3 flex gap-1.5 flex-wrap">
                             <span class="bg-white/90 backdrop-blur-md text-gray-900 text-[10px] font-bold px-2.5 py-1 rounded-full shadow-sm">${p.platform}</span>
+                            ${isLocal ? `<span class="bg-emerald-500 text-white text-[10px] font-bold px-2.5 py-1 rounded-full shadow-sm">GCash Direct</span>` : ''}
                         </div>
                     </div>
 
@@ -724,7 +921,7 @@
                             </div>
                             <div class="flex items-center space-x-1.5">
                                 <button onclick="openPreviewModal('${p.id}')" class="px-3 py-2 rounded-xl bg-gray-100 hover:bg-gray-200 text-gray-700 text-xs font-semibold transition">Preview</button>
-                                <a href="${p.checkout}" target="_blank" rel="noopener" class="px-3.5 py-2 rounded-xl bg-gray-900 hover:bg-gray-800 text-white text-xs font-semibold transition shadow-sm">Buy</a>
+                                <button onclick="${buyBtnAction}" class="px-3.5 py-2 rounded-xl bg-gray-900 hover:bg-gray-800 text-white text-xs font-semibold transition shadow-sm">${isLocal ? 'Get via GCash' : 'Buy'}</button>
                             </div>
                         </div>
                     </div>
@@ -762,7 +959,25 @@
 
             document.getElementById('modal-description').textContent = item.description;
             document.getElementById('modal-price').textContent = formatPrice(item.price);
-            document.getElementById('modal-buy-link').href = item.checkout;
+
+            const actionCont = document.getElementById('modal-action-container');
+            const isLocal = item.listingType === 'local';
+
+            if (isLocal) {
+                actionCont.innerHTML = `
+                    <button onclick="closePreviewModal(); openGcashModal('${item.id}');" class="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-sm px-6 py-3 rounded-xl transition shadow-md flex items-center gap-2">
+                        <span>Get Template via GCash</span>
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                    </button>
+                `;
+            } else {
+                actionCont.innerHTML = `
+                    <a href="${item.checkout}" target="_blank" rel="noopener" class="bg-gray-900 hover:bg-gray-800 text-white font-semibold text-sm px-6 py-3 rounded-xl transition shadow-md flex items-center gap-2">
+                        <span>Purchase Template</span>
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                    </a>
+                `;
+            }
 
             const imgEl = document.getElementById('modal-image');
             const mediaCont = document.getElementById('media-container');
@@ -807,6 +1022,188 @@
             } else if (view === 'mobile') {
                 wrap.style.maxWidth = '375px';
                 btnM.className = "px-3 py-1 rounded-lg bg-white shadow-sm text-gray-900";
+            }
+        }
+
+        // Local GCash Checkout Modal
+        function openGcashModal(id) {
+            const item = products.find(p => p.id === id);
+            if (!item) return;
+
+            document.getElementById('gcash-product-id').value = item.id;
+            document.getElementById('gcash-item-title').textContent = item.title;
+            document.getElementById('gcash-item-price').textContent = formatPrice(item.price);
+            
+            document.getElementById('gcash-order-form').reset();
+            document.getElementById('buyer-receipt-data').value = '';
+            document.getElementById('receipt-preview-box').classList.add('hidden');
+
+            document.getElementById('gcash-checkout-modal').classList.remove('hidden');
+        }
+
+        function closeGcashModal() {
+            document.getElementById('gcash-checkout-modal').classList.add('hidden');
+        }
+
+        function handleReceiptUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const base64 = e.target.result;
+                document.getElementById('buyer-receipt-data').value = base64;
+                document.getElementById('receipt-preview-img').src = base64;
+                document.getElementById('receipt-preview-box').classList.remove('hidden');
+            };
+            reader.readAsDataURL(file);
+        }
+
+        async function handleGcashOrderSubmit(e) {
+            e.preventDefault();
+            const prodId = document.getElementById('gcash-product-id').value;
+            const item = products.find(p => p.id === prodId);
+            if (!item) return;
+
+            const receiptData = document.getElementById('buyer-receipt-data').value;
+            if (!receiptData) {
+                alert("Please upload your GCash payment screenshot.");
+                return;
+            }
+
+            const newOrder = {
+                id: 'ord-' + Date.now(),
+                productId: item.id,
+                productTitle: item.title,
+                pricePhp: item.price,
+                buyerName: document.getElementById('buyer-name').value,
+                buyerEmail: document.getElementById('buyer-email').value,
+                buyerFb: document.getElementById('buyer-fb').value || 'Not provided',
+                receiptData: receiptData,
+                status: 'Pending',
+                date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit' })
+            };
+
+            if (isFirebaseConnected && db) {
+                try {
+                    await db.collection('orders').doc(newOrder.id).set(newOrder);
+                } catch(err) {
+                    console.error("Error saving order to Firestore:", err);
+                    saveOrderLocally(newOrder);
+                }
+            } else {
+                saveOrderLocally(newOrder);
+            }
+
+            closeGcashModal();
+            alert("Thank you! Your order and payment receipt have been received. The creator will verify your payment and send your file/link to your email or FB Messenger shortly.");
+        }
+
+        function saveOrderLocally(newOrder) {
+            orders.unshift(newOrder);
+            saveLocalOrders();
+            updatePendingOrdersBadge();
+        }
+
+        // Creator Orders Dashboard
+        function openOrdersDashboardModal() {
+            renderOrdersList();
+            document.getElementById('orders-dashboard-modal').classList.remove('hidden');
+        }
+
+        function closeOrdersDashboardModal() {
+            document.getElementById('orders-dashboard-modal').classList.add('hidden');
+        }
+
+        function renderOrdersList() {
+            const container = document.getElementById('orders-list-container');
+            container.innerHTML = '';
+
+            if (orders.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center py-12 text-gray-400 text-xs">
+                        No orders recorded yet.
+                    </div>
+                `;
+                return;
+            }
+
+            orders.forEach(ord => {
+                const card = document.createElement('div');
+                card.className = "bg-gray-50 border border-gray-200 rounded-2xl p-4 flex flex-col md:flex-row md:items-center justify-between gap-4 text-xs";
+
+                const isPending = ord.status === 'Pending';
+                const statusCls = isPending ? 'bg-amber-100 text-amber-800' : 'bg-emerald-100 text-emerald-800';
+
+                card.innerHTML = `
+                    <div class="space-y-1">
+                        <div class="flex items-center gap-2">
+                            <span class="font-bold text-gray-900 text-sm">${ord.productTitle}</span>
+                            <span class="px-2 py-0.5 rounded-full text-[10px] font-bold ${statusCls}">${ord.status}</span>
+                        </div>
+                        <p class="text-gray-600"><span class="font-semibold text-gray-800">Buyer:</span> ${ord.buyerName} (&lt;${ord.buyerEmail}&gt;)</p>
+                        <p class="text-gray-500"><span class="font-semibold text-gray-800">FB Link/Name:</span> ${ord.buyerFb}</p>
+                        <p class="text-[11px] text-gray-400">Date: ${ord.date} | Amount: PHP ${ord.pricePhp}</p>
+                    </div>
+
+                    <div class="flex items-center space-x-2 flex-shrink-0">
+                        <button onclick="viewReceipt('${ord.id}')" class="bg-white border border-gray-200 hover:bg-gray-100 text-gray-800 px-3 py-2 rounded-xl font-semibold shadow-sm">
+                            View Receipt
+                        </button>
+                        <a href="mailto:${ord.buyerEmail}?subject=CheemsCraft Order Delivery - ${encodeURIComponent(ord.productTitle)}" class="bg-gray-900 hover:bg-gray-800 text-white px-3 py-2 rounded-xl font-semibold transition">
+                            Send Email
+                        </a>
+                        ${isPending ? `
+                            <button onclick="updateOrderStatus('${ord.id}', 'Sent')" class="bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-2 rounded-xl font-semibold transition shadow-sm">
+                                Mark as Sent
+                            </button>
+                        ` : `
+                            <button onclick="updateOrderStatus('${ord.id}', 'Pending')" class="bg-amber-500 hover:bg-amber-600 text-gray-900 px-3 py-2 rounded-xl font-semibold transition">
+                                Reset Pending
+                            </button>
+                        `}
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function viewReceipt(orderId) {
+            const ord = orders.find(o => o.id === orderId);
+            if (!ord || !ord.receiptData) return;
+            document.getElementById('receipt-modal-img').src = ord.receiptData;
+            document.getElementById('receipt-modal').classList.remove('hidden');
+        }
+
+        function closeReceiptModal() {
+            document.getElementById('receipt-modal').classList.add('hidden');
+        }
+
+        async function updateOrderStatus(orderId, newStatus) {
+            const ord = orders.find(o => o.id === orderId);
+            if (ord) {
+                ord.status = newStatus;
+                if (isFirebaseConnected && db) {
+                    try {
+                        await db.collection('orders').doc(orderId).update({ status: newStatus });
+                    } catch(e) {
+                        console.error("Firestore update order status error:", e);
+                    }
+                }
+                saveLocalOrders();
+                renderOrdersList();
+                updatePendingOrdersBadge();
+            }
+        }
+
+        // Creator Form Handlers
+        function toggleListingFields() {
+            const type = document.querySelector('input[name="form-listing-type"]:checked').value;
+            const raketField = document.getElementById('field-raket-url');
+            if (type === 'raket') {
+                raketField.classList.remove('hidden');
+            } else {
+                raketField.classList.add('hidden');
             }
         }
 
@@ -855,8 +1252,12 @@
                     document.getElementById('form-title').value = item.title;
                     document.getElementById('form-platform').value = item.platform;
                     document.getElementById('form-price').value = item.price;
-                    document.getElementById('form-checkout').value = item.checkout;
+                    document.getElementById('form-checkout').value = item.checkout || '';
                     
+                    const listingRadio = document.querySelector(`input[name="form-listing-type"][value="${item.listingType || 'raket'}"]`);
+                    if (listingRadio) listingRadio.checked = true;
+                    toggleListingFields();
+
                     document.getElementById('form-image-data').value = item.image || '';
                     document.getElementById('form-aspect-ratio').value = item.aspectRatio || 'aspect-4-3';
                     document.getElementById('form-object-fit').value = item.objectFit || 'object-cover';
@@ -867,7 +1268,6 @@
                         updateImagePreviewControls();
                     }
 
-                    // Check audience checkboxes
                     const auds = Array.isArray(item.audiences) ? item.audiences : (item.audience ? [item.audience] : []);
                     document.querySelectorAll('input[name="form-audience-check"]').forEach(cb => {
                         cb.checked = auds.includes(cb.value);
@@ -879,6 +1279,7 @@
             } else {
                 document.getElementById('creator-modal-title').textContent = "Add New Template Listing";
                 document.getElementById('form-id').value = '';
+                toggleListingFields();
             }
             document.getElementById('creator-modal').classList.remove('hidden');
         }
@@ -903,6 +1304,7 @@
                 return;
             }
 
+            const listingType = document.querySelector('input[name="form-listing-type"]:checked').value;
             const imgData = document.getElementById('form-image-data').value || 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=800&q=80';
 
             const newItem = {
@@ -910,7 +1312,8 @@
                 platform: document.getElementById('form-platform').value,
                 audiences: selectedAudiences,
                 price: parseFloat(document.getElementById('form-price').value) || 0,
-                checkout: document.getElementById('form-checkout').value,
+                listingType: listingType,
+                checkout: document.getElementById('form-checkout').value || 'https://raket.ph',
                 image: imgData,
                 aspectRatio: document.getElementById('form-aspect-ratio').value,
                 objectFit: document.getElementById('form-object-fit').value,

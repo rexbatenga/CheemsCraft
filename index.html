@@ -39,6 +39,7 @@
         body { 
             font-family: 'Plus Jakarta Sans', sans-serif; 
             -webkit-tap-highlight-color: transparent;
+            background-color: #ffffff;
         }
         .serif-accent {
             font-family: 'Instrument Serif', serif;
@@ -66,21 +67,27 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between h-16 gap-2">
                 
-                <!-- Header Logo Image (Triple-click trigger for secret Creator Mode) -->
+                <!-- Side-by-Side Logo Image & Brand Title (Triple-click trigger for Creator Mode) -->
                 <div class="flex items-center gap-2.5 min-w-0">
-                    <button id="logo-btn" onclick="handleLogoClick()" class="flex items-center gap-2 text-left group focus:outline-none focus:ring-2 focus:ring-slate-900/10 rounded-lg p-1 transition-all" title="CheemsCraft Storefront">
-                        <img src="Cc logo.png" alt="CheemsCraft Templates & UI Kits" class="h-10 w-auto object-contain flex-shrink-0 group-hover:scale-105 transition-transform" onerror="this.style.display='none'; document.getElementById('logo-text-fallback').classList.remove('hidden');">
-                        <div id="logo-text-fallback" class="hidden flex items-center gap-2">
-                            <div class="w-9 h-9 rounded-xl bg-slate-900 text-white flex items-center justify-center font-bold text-lg shadow-sm">C</div>
-                            <span class="font-extrabold text-slate-900 tracking-tight text-base">CheemsCraft</span>
+                    <button id="logo-btn" onclick="handleLogoClick()" class="flex items-center gap-2.5 text-left group focus:outline-none focus:ring-2 focus:ring-slate-900/10 rounded-lg p-1 transition-all" title="CheemsCraft Storefront">
+                        <!-- Cc logo.png image -->
+                        <img src="Cc logo.png" alt="CheemsCraft" class="h-9 sm:h-10 w-auto object-contain flex-shrink-0 group-hover:scale-105 transition-transform" onerror="this.style.display='none'; document.getElementById('logo-icon-fallback').classList.remove('hidden');">
+                        <!-- Fallback icon if image is missing/loading -->
+                        <div id="logo-icon-fallback" class="hidden w-9 h-9 rounded-xl bg-slate-900 text-white flex items-center justify-center font-bold text-lg shadow-sm flex-shrink-0">C</div>
+                        
+                        <!-- Side-by-side Title Text -->
+                        <div class="flex flex-col sm:flex-row sm:items-baseline sm:gap-2 leading-tight">
+                            <span class="serif-accent font-normal text-xl sm:text-2xl text-slate-900 tracking-tight">CheemsCraft</span>
+                            <span class="text-[11px] sm:text-xs font-bold text-slate-500 uppercase tracking-wider">Templates & UI Kits</span>
                         </div>
                     </button>
+                    
                     <span id="creator-badge" class="hidden text-[10px] sm:text-xs bg-amber-100 text-amber-800 font-medium px-2 py-0.5 rounded-full border border-amber-200 flex-shrink-0">
                         Creator Active
                     </span>
                 </div>
 
-                <!-- Currency Picker Selector -->
+                <!-- Currency Switcher Selector -->
                 <div class="flex items-center gap-2 flex-shrink-0">
                     <div class="relative inline-flex items-center">
                         <i class="fa-solid fa-globe text-slate-400 text-xs absolute left-2.5 pointer-events-none"></i>
@@ -114,11 +121,11 @@
         <div class="max-w-4xl mx-auto px-4 text-center">
             
             <h1 class="text-3xl sm:text-5xl md:text-6xl font-extrabold text-slate-900 tracking-tight leading-tight">
-                Practical digital tools designed to <span class="serif-accent font-normal bg-gradient-to-r from-rose-500 via-pink-500 to-amber-500 bg-clip-text text-transparent drop-shadow-sm pr-1">save you time</span>
+                Practical digital tools designed to <span class="serif-accent font-normal bg-gradient-to-r from-rose-500 via-purple-500 to-amber-500 bg-clip-text text-transparent drop-shadow-sm pr-1">save you time</span>
             </h1>
 
             <p class="mt-4 sm:mt-5 text-xs sm:text-base text-slate-600 max-w-2xl mx-auto leading-relaxed font-normal px-2">
-                Ready-to-use Google Sheets, Notion systems, slide decks, Canva graphics, CVs, website templates, and many more tools built for real work.
+                Ready-to-use Google Sheets, Notion systems, Canva graphics, CVs/resumes, slide decks, website templates, and many more tools built for real work.
             </p>
 
             <div class="mt-6 sm:mt-8 max-w-xl mx-auto relative px-1">
@@ -139,7 +146,7 @@
                     <button onclick="setAudienceFilter('all')" class="audience-btn active-audience-btn whitespace-nowrap px-3 py-1.5 text-xs font-semibold rounded-lg border transition-all bg-slate-900 text-white border-slate-900 shadow-sm flex-shrink-0" data-audience="all">
                         All Audiences
                     </button>
-                    <!-- Emojis strictly restricted to audience pills -->
+                    <!-- Emojis strictly restricted to these 4 audience pills -->
                     <button onclick="setAudienceFilter('Small Business')" class="audience-btn whitespace-nowrap px-3 py-1.5 text-xs font-semibold rounded-lg border bg-white text-slate-700 border-slate-200 hover:border-slate-300 transition-all shadow-sm flex-shrink-0" data-audience="Small Business">
                         Small Business 💼
                     </button>
@@ -171,8 +178,8 @@
                     <button onclick="setTypeFilter('CV / Resume')" class="type-btn whitespace-nowrap px-3 py-1.5 text-xs font-medium rounded-lg border bg-white text-slate-600 border-slate-200 hover:bg-slate-100 transition-all flex-shrink-0" data-type="CV / Resume">
                         CV / Resume
                     </button>
-                    <button onclick="setTypeFilter('Portfolio HTML')" class="type-btn whitespace-nowrap px-3 py-1.5 text-xs font-medium rounded-lg border bg-white text-slate-600 border-slate-200 hover:bg-slate-100 transition-all flex-shrink-0" data-type="Portfolio HTML">
-                        Portfolio HTML
+                    <button onclick="setTypeFilter('Portfolio & Web HTML')" class="type-btn whitespace-nowrap px-3 py-1.5 text-xs font-medium rounded-lg border bg-white text-slate-600 border-slate-200 hover:bg-slate-100 transition-all flex-shrink-0" data-type="Portfolio & Web HTML">
+                        Portfolio & Web HTML
                     </button>
                     <button onclick="setTypeFilter('Notion Workspace')" class="type-btn whitespace-nowrap px-3 py-1.5 text-xs font-medium rounded-lg border bg-white text-slate-600 border-slate-200 hover:bg-slate-100 transition-all flex-shrink-0" data-type="Notion Workspace">
                         Notion Workspace
@@ -217,7 +224,7 @@
             <div class="text-[11px] sm:text-xs text-slate-500 font-medium" id="active-currency-indicator">Prices in PHP (₱)</div>
         </div>
 
-        <!-- Dynamic Product Grid (1 column on mobile, 2 on tablet, 3/4 on desktop) -->
+        <!-- Dynamic Product Grid -->
         <div id="product-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
             <!-- Rendered dynamically via JavaScript -->
         </div>
@@ -240,16 +247,15 @@
     <footer class="mt-auto border-t border-slate-100 bg-slate-50/60 py-6 sm:py-8 relative">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left">
             <div class="flex items-center gap-2.5">
-                <img src="Cc logo.png" alt="CheemsCraft" class="h-6 w-auto object-contain" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
-                <span style="display:none;" class="text-xs font-bold text-slate-900">C</span>
-                <span class="text-xs font-semibold text-slate-700">CheemsCraft Templates & UI Kits</span>
+                <img src="Cc logo.png" alt="CheemsCraft" class="h-6 w-auto object-contain" onerror="this.style.display='none';">
+                <span class="text-xs font-semibold text-slate-700"><span class="serif-accent font-normal text-sm">CheemsCraft</span> Templates & UI Kits</span>
             </div>
             <p class="text-[11px] text-slate-400">
                 Designed for optimal efficiency. Built with clean HTML & Tailwind CSS.
             </p>
         </div>
         
-        <!-- Discreet Creator Portal Link (Bottom Right Corner) -->
+        <!-- Secret Creator Portal Trigger Link (Bottom Right Corner) -->
         <div class="absolute bottom-2 right-3">
             <button id="admin-toggle-btn" onclick="openCreatorLoginModal()" class="text-[10px] text-slate-300 hover:text-slate-500 transition-colors focus:outline-none opacity-60 hover:opacity-100" title="Creator Access">
                 creator portal
@@ -351,8 +357,7 @@
     <div id="login-modal" class="fixed inset-0 z-50 hidden bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
         <div class="bg-white rounded-2xl max-w-sm w-full p-5 sm:p-6 shadow-2xl border border-slate-100 space-y-4">
             <div class="text-center">
-                <img src="Cc logo.png" alt="Logo" class="h-10 w-auto object-contain mx-auto mb-2" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
-                <div style="display:none;" class="w-10 h-10 bg-slate-900 text-white rounded-xl flex items-center justify-center font-bold text-lg mx-auto mb-2">C</div>
+                <img src="Cc logo.png" alt="Logo" class="h-10 w-auto object-contain mx-auto mb-2" onerror="this.style.display='none';">
                 <h3 class="text-base sm:text-lg font-bold text-slate-900">Creator Authentication</h3>
                 <p class="text-xs text-slate-500 mt-1">Enter password to manage storefront templates.</p>
             </div>
@@ -409,7 +414,7 @@
                             <option value="Canva Template">Canva Template</option>
                             <option value="Spreadsheet">Spreadsheet</option>
                             <option value="CV / Resume">CV / Resume</option>
-                            <option value="Portfolio HTML">Portfolio HTML</option>
+                            <option value="Portfolio & Web HTML">Portfolio & Web HTML</option>
                             <option value="Notion Workspace">Notion Workspace</option>
                             <option value="Social Media Kit">Social Media Kit</option>
                         </select>
@@ -492,7 +497,7 @@
                 title: "Minimalist Developer & Designer Portfolio",
                 pricePHP: 599,
                 audience: "Creators",
-                type: "Portfolio HTML",
+                type: "Portfolio & Web HTML",
                 image: "https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?auto=format&fit=crop&w=800&q=80",
                 videoUrl: "",
                 link: "https://raket.ph",
@@ -525,7 +530,7 @@
             }
         ];
 
-        // --- CURRENCY CONVERSION TABLES ---
+        // --- CURRENCY CONVERSION TABLES (ASEAN + GLOBAL) ---
         const CURRENCY_DATA = {
             PHP: { rate: 1.0, symbol: '₱' },
             USD: { rate: 0.018, symbol: '$' },
@@ -618,6 +623,7 @@
             return `${curr.symbol} ${converted.toFixed(2)}`;
         }
 
+        // --- RENDERING PRODUCTS ---
         function renderProducts() {
             const grid = document.getElementById('product-grid');
             const emptyState = document.getElementById('empty-state');
@@ -827,9 +833,7 @@
         }
 
         function openCreatorLoginModal() {
-            if (isCreatorMode) {
-                return;
-            }
+            if (isCreatorMode) return;
             document.getElementById('login-password').value = '';
             document.getElementById('login-error').classList.add('hidden');
             document.getElementById('login-modal').classList.remove('hidden');
@@ -958,7 +962,7 @@
             renderProducts();
         }
 
-        // --- HARDCODED HTML EXPORT ---
+        // --- HARDCODED SINGLE-FILE HTML EXPORT ---
         function exportBakedHTML() {
             let fullHtml = document.documentElement.outerHTML;
             const jsonString = JSON.stringify(products, null, 4);

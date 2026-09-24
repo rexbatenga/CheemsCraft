@@ -216,7 +216,25 @@
         </div>
     </div>
 
-    <!-- 2. Template Preview Modal -->
+    <!-- 2. Centered Floating Thank You Confirmation Modal (Styled identically to Creator Auth Modal) -->
+    <div id="thank-you-modal" class="fixed inset-0 z-50 bg-gray-900/60 backdrop-blur-sm hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl transform transition-all border border-gray-100 text-center">
+            <div class="w-12 h-12 bg-emerald-50 text-emerald-600 rounded-2xl flex items-center justify-center mx-auto mb-4 border border-emerald-100">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path></svg>
+            </div>
+            
+            <h3 class="text-xl font-extrabold text-gray-900 mb-2">Thank You for Your Order!</h3>
+            <p class="text-xs text-gray-600 leading-relaxed mb-6">
+                Your order details and payment receipt have been submitted successfully. The creator will verify your payment and send your digital tool link to your provided email address or Facebook Messenger shortly.
+            </p>
+
+            <button onclick="closeThankYouModal()" class="w-full py-3 rounded-xl bg-gray-900 text-white text-xs font-semibold hover:bg-gray-800 transition shadow-sm">
+                Done & Close
+            </button>
+        </div>
+    </div>
+
+    <!-- 3. Template Preview Modal -->
     <div id="preview-modal" class="fixed inset-0 z-50 bg-gray-900/60 backdrop-blur-sm hidden flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
         <div class="bg-white rounded-3xl max-w-4xl w-full overflow-hidden shadow-2xl my-auto max-h-[92vh] flex flex-col transform transition-all">
             <div class="px-6 py-4 border-b border-gray-100 flex items-center justify-between bg-white sticky top-0 z-10">
@@ -272,7 +290,7 @@
         </div>
     </div>
 
-    <!-- 3. Local GCash Payment Checkout Modal with Mandatory Email/FB Delivery Notice -->
+    <!-- 4. Local GCash Payment Checkout Modal -->
     <div id="gcash-checkout-modal" class="fixed inset-0 z-50 bg-gray-900/60 backdrop-blur-sm hidden flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
         <div class="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl my-auto max-h-[92vh] overflow-y-auto border border-gray-100 flex flex-col">
             <div class="flex items-center justify-between border-b border-gray-100 pb-3 mb-4">
@@ -285,12 +303,12 @@
                 </button>
             </div>
 
-            <!-- Prominent Customer Notice for Delivery -->
+            <!-- Mandatory Customer Fulfillment Notice -->
             <div class="bg-rose-50 border border-rose-200 rounded-2xl p-3.5 mb-5 text-xs text-rose-900 flex items-start space-x-2.5">
                 <svg class="w-5 h-5 text-rose-500 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                 <div class="space-y-1">
                     <p class="font-bold">Fulfillment Notice:</p>
-                    <p class="leading-relaxed">Your digital product file or access link will be sent directly to your provided Email Address or Facebook Messenger upon payment verification.</p>
+                    <p class="leading-relaxed">Note: Your digital product file/link will be sent directly to your provided Email Address or Facebook Messenger upon payment verification.</p>
                 </div>
             </div>
 
@@ -325,11 +343,6 @@
                 <!-- Buyer Info Form -->
                 <form id="gcash-order-form" onsubmit="handleGcashOrderSubmit(event)" class="space-y-3">
                     <input type="hidden" id="gcash-product-id">
-                    
-                    <div>
-                        <label class="block font-bold text-gray-700 mb-1">Your Full Name *</label>
-                        <input type="text" id="buyer-name" required placeholder="e.g. Juan Dela Cruz" class="w-full border border-gray-200 rounded-xl p-2.5 text-xs focus:outline-none focus:ring-2 focus:ring-rose-200">
-                    </div>
 
                     <div>
                         <label class="block font-bold text-gray-700 mb-1">Email Address (For Product Delivery) *</label>
@@ -337,12 +350,12 @@
                     </div>
 
                     <div>
-                        <label class="block font-bold text-gray-700 mb-1">Facebook Messenger / Profile Link (Optional)</label>
-                        <input type="text" id="buyer-fb" placeholder="https://facebook.com/yourprofile or your FB Name" class="w-full border border-gray-200 rounded-xl p-2.5 text-xs focus:outline-none focus:ring-2 focus:ring-rose-200">
+                        <label class="block font-bold text-gray-700 mb-1">Facebook Username (optional)</label>
+                        <input type="text" id="buyer-fb" placeholder="e.g. rex.renaciabatenga or your profile link" class="w-full border border-gray-200 rounded-xl p-2.5 text-xs focus:outline-none focus:ring-2 focus:ring-rose-200">
                     </div>
 
                     <div>
-                        <label class="block font-bold text-gray-700 mb-1">Upload GCash Payment Screenshot / Proof *</label>
+                        <label class="block font-bold text-gray-700 mb-1">Upload GCash Payment Screenshot/ Any proof *</label>
                         <input type="file" id="buyer-receipt-file" accept="image/*" required onchange="handleReceiptUpload(event)" class="w-full text-xs text-gray-500 file:mr-3 file:py-2 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-gray-900 file:text-white hover:file:bg-gray-800 cursor-pointer">
                         <input type="hidden" id="buyer-receipt-data">
                         
@@ -361,7 +374,7 @@
         </div>
     </div>
 
-    <!-- 4. Add / Edit Template Modal -->
+    <!-- 5. Add / Edit Template Modal -->
     <div id="creator-modal" class="fixed inset-0 z-50 bg-gray-900/60 backdrop-blur-sm hidden flex items-center justify-center p-4 overflow-y-auto">
         <div class="bg-white rounded-3xl max-w-xl w-full p-6 shadow-2xl my-auto max-h-[90vh] overflow-y-auto">
             <div class="flex items-center justify-between border-b border-gray-100 pb-3 mb-4">
@@ -506,7 +519,7 @@
         </div>
     </div>
 
-    <!-- 5. Orders Dashboard Modal (Creator Admin) -->
+    <!-- 6. Orders Dashboard Modal (Creator Admin) -->
     <div id="orders-dashboard-modal" class="fixed inset-0 z-50 bg-gray-900/60 backdrop-blur-sm hidden flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
         <div class="bg-white rounded-3xl max-w-5xl w-full p-6 shadow-2xl my-auto max-h-[92vh] flex flex-col border border-gray-100">
             <div class="flex items-center justify-between border-b border-gray-100 pb-3 mb-4">
@@ -527,7 +540,7 @@
         </div>
     </div>
 
-    <!-- 6. Receipt Image Viewer Modal -->
+    <!-- 7. Receipt Image Viewer Modal -->
     <div id="receipt-modal" class="fixed inset-0 z-50 bg-gray-900/80 backdrop-blur-md hidden flex items-center justify-center p-4">
         <div class="bg-white rounded-3xl max-w-lg w-full p-4 shadow-2xl relative flex flex-col items-center">
             <button onclick="closeReceiptModal()" class="absolute top-3 right-3 bg-gray-100 hover:bg-gray-200 text-gray-700 p-2 rounded-full">
@@ -540,7 +553,7 @@
         </div>
     </div>
 
-    <!-- 7. Firebase Configuration Modal -->
+    <!-- 8. Firebase Configuration Modal -->
     <div id="firebase-config-modal" class="fixed inset-0 z-50 bg-gray-900/60 backdrop-blur-sm hidden flex items-center justify-center p-4">
         <div class="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl border border-gray-100">
             <div class="flex items-center justify-between border-b border-gray-100 pb-3 mb-4">
@@ -1076,7 +1089,6 @@
                 productId: item.id,
                 productTitle: item.title,
                 pricePhp: item.price,
-                buyerName: document.getElementById('buyer-name').value,
                 buyerEmail: document.getElementById('buyer-email').value,
                 buyerFb: document.getElementById('buyer-fb').value || 'Not provided',
                 receiptData: receiptData,
@@ -1096,7 +1108,7 @@
             }
 
             closeGcashModal();
-            alert("Thank you! Your order and payment receipt have been received. The creator will verify your payment and send your file/link to your email or FB Messenger shortly.");
+            openThankYouModal();
         }
 
         function saveOrderLocally(newOrder) {
@@ -1105,7 +1117,14 @@
             updatePendingOrdersBadge();
         }
 
-        // Creator Orders Dashboard
+        function openThankYouModal() {
+            document.getElementById('thank-you-modal').classList.remove('hidden');
+        }
+
+        function closeThankYouModal() {
+            document.getElementById('thank-you-modal').classList.add('hidden');
+        }
+
         function openOrdersDashboardModal() {
             renderOrdersList();
             document.getElementById('orders-dashboard-modal').classList.remove('hidden');
@@ -1135,14 +1154,19 @@
                 const isPending = ord.status === 'Pending';
                 const statusCls = isPending ? 'bg-amber-100 text-amber-800' : 'bg-emerald-100 text-emerald-800';
 
+                // Gmail direct compose link construction
+                const subject = encodeURIComponent(`CheemsCraft Order Fulfillment: ${ord.productTitle}`);
+                const body = encodeURIComponent(`Hi there,\n\nThank you for purchasing ${ord.productTitle} from CheemsCraft!\n\nHere is your direct access link / file:\n[Insert Link Here]\n\nIf you have any questions, feel free to reply to this email.\n\nBest regards,\nRex / CheemsCraft`);
+                const gmailUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(ord.buyerEmail)}&su=${subject}&body=${body}`;
+
                 card.innerHTML = `
                     <div class="space-y-1">
                         <div class="flex items-center gap-2">
                             <span class="font-bold text-gray-900 text-sm">${ord.productTitle}</span>
                             <span class="px-2 py-0.5 rounded-full text-[10px] font-bold ${statusCls}">${ord.status}</span>
                         </div>
-                        <p class="text-gray-600"><span class="font-semibold text-gray-800">Buyer:</span> ${ord.buyerName} (&lt;${ord.buyerEmail}&gt;)</p>
-                        <p class="text-gray-500"><span class="font-semibold text-gray-800">FB Link/Name:</span> ${ord.buyerFb}</p>
+                        <p class="text-gray-600"><span class="font-semibold text-gray-800">Buyer Email:</span> ${ord.buyerEmail}</p>
+                        <p class="text-gray-500"><span class="font-semibold text-gray-800">FB Username:</span> ${ord.buyerFb}</p>
                         <p class="text-[11px] text-gray-400">Date: ${ord.date} | Amount: PHP ${ord.pricePhp}</p>
                     </div>
 
@@ -1150,9 +1174,9 @@
                         <button onclick="viewReceipt('${ord.id}')" class="bg-white border border-gray-200 hover:bg-gray-100 text-gray-800 px-3 py-2 rounded-xl font-semibold shadow-sm">
                             View Receipt
                         </button>
-                        <a href="mailto:${ord.buyerEmail}?subject=CheemsCraft Order Delivery - ${encodeURIComponent(ord.productTitle)}" class="bg-gray-900 hover:bg-gray-800 text-white px-3 py-2 rounded-xl font-semibold transition">
+                        <button onclick="sendFulfillmentEmail('${gmailUrl}', '${ord.buyerEmail}')" class="bg-gray-900 hover:bg-gray-800 text-white px-3 py-2 rounded-xl font-semibold transition shadow-sm">
                             Send Email
-                        </a>
+                        </button>
                         ${isPending ? `
                             <button onclick="updateOrderStatus('${ord.id}', 'Sent')" class="bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-2 rounded-xl font-semibold transition shadow-sm">
                                 Mark as Sent
@@ -1166,6 +1190,13 @@
                 `;
                 container.appendChild(card);
             });
+        }
+
+        function sendFulfillmentEmail(gmailUrl, recipientEmail) {
+            const win = window.open(gmailUrl, '_blank');
+            if (!win || win.closed || typeof win.closed === 'undefined') {
+                window.location.href = `mailto:${recipientEmail}?subject=CheemsCraft Order Fulfillment`;
+            }
         }
 
         function viewReceipt(orderId) {
@@ -1196,7 +1227,6 @@
             }
         }
 
-        // Creator Form Handlers
         function toggleListingFields() {
             const type = document.querySelector('input[name="form-listing-type"]:checked').value;
             const raketField = document.getElementById('field-raket-url');
@@ -1363,7 +1393,6 @@
             }
         }
 
-        // Firebase Configuration Modal Handlers
         function openFirebaseConfigModal() {
             document.getElementById('cfg-apiKey').value = firebaseConfig.apiKey || '';
             document.getElementById('cfg-authDomain').value = firebaseConfig.authDomain || '';

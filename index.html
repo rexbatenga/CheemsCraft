@@ -23,7 +23,6 @@
         }
     </script>
     <style>
-        /* Hide scrollbars for clean UI while keeping scrolling functionality */
         .hide-scrollbar::-webkit-scrollbar { display: none; }
         .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
         
@@ -33,17 +32,23 @@
             -webkit-text-fill-color: transparent;
         }
     </style>
+
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
 </head>
 <body class="bg-[#FFFFFF] text-gray-800 font-sans antialiased min-h-screen flex flex-col selection:bg-rose-100 selection:text-rose-900">
 
-    <!-- Secret Creator Mode Top Control Bar (Hidden by default) -->
     <div id="creator-bar" class="hidden bg-gray-900 text-white px-4 py-2.5 shadow-md sticky top-0 z-50 transition-all duration-300">
         <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-3 text-sm">
             <div class="flex items-center space-x-2 font-medium">
                 <span class="inline-block w-2.5 h-2.5 bg-emerald-400 rounded-full animate-pulse"></span>
-                <span>Creator CMS Active</span>
+                <span id="cms-status-text">Creator CMS Active (Local Mode)</span>
             </div>
             <div class="flex items-center space-x-2">
+                <button onclick="openConfigModal()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-3 py-1.5 rounded-lg text-xs font-bold transition shadow-sm">
+                    Firebase Setup
+                </button>
                 <button onclick="openProductModal()" class="bg-white text-gray-900 hover:bg-gray-100 px-3.5 py-1.5 rounded-lg text-xs font-bold transition shadow-sm">
                     + Add New Template
                 </button>
@@ -51,13 +56,12 @@
                     Export HTML File
                 </button>
                 <button onclick="toggleCreatorMode(false)" class="text-gray-400 hover:text-white px-2 py-1 text-xs font-semibold">
-                    Exit Creator Mode
+                    Exit
                 </button>
             </div>
         </div>
     </div>
 
-    <!-- Main Navigation Header -->
     <header class="border-b border-gray-100 bg-white/90 backdrop-blur-md sticky top-0 z-40">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between gap-4">
             
@@ -71,7 +75,7 @@
                 </div>
             </div>
 
-            <!-- Currency Switcher & Global Controls -->
+            <!-- Currency Switcher -->
             <div class="flex items-center space-x-3">
                 <div class="relative inline-block text-left">
                     <select id="currency-select" onchange="handleCurrencyChange(this.value)" class="appearance-none bg-gray-50 border border-gray-200 text-gray-700 text-xs font-semibold py-2 pl-3 pr-8 rounded-xl focus:outline-none focus:ring-2 focus:ring-rose-200 focus:border-rose-400 transition cursor-pointer">
@@ -95,9 +99,7 @@
         </div>
     </header>
 
-    <!-- Main Content Area -->
     <main class="flex-grow">
-        <!-- Hero Banner Section -->
         <section class="max-w-5xl mx-auto px-4 sm:px-6 pt-14 pb-10 text-center">
             <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-gray-900 tracking-tight leading-[1.15] mb-6">
                 Practical digital tools designed to <span class="font-serif italic font-normal gradient-text text-5xl sm:text-6xl lg:text-7xl">save you time</span>
@@ -106,14 +108,13 @@
                 Ready-to-use Canva graphics, CVs, spreadsheets, Notion systems, website templates, and many more tools built for real work.
             </p>
 
-            <!-- Search & Filter Controls -->
             <div class="max-w-xl mx-auto space-y-4">
                 <div class="relative">
                     <input type="text" id="search-input" oninput="renderStorefront()" placeholder="Search templates, spreadsheets, or platforms..." class="w-full bg-gray-50/80 border border-gray-200 rounded-2xl py-3.5 pl-11 pr-4 text-sm text-gray-800 placeholder-gray-400 focus:outline-none focus:bg-white focus:ring-2 focus:ring-rose-200 focus:border-rose-400 transition shadow-sm">
                     <svg class="w-5 h-5 text-gray-400 absolute left-3.5 top-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
                 </div>
 
-                <!-- Audience Filter Pills (EMOJIS ALLOWED STRICTLY HERE ONLY) -->
+                <!-- Audience Filters (Strict Emoji Usage) -->
                 <div class="flex items-center justify-center gap-2 overflow-x-auto hide-scrollbar py-1">
                     <button onclick="setAudienceFilter('all')" id="aud-all" class="aud-btn active px-3.5 py-1.5 rounded-xl text-xs font-medium transition-all whitespace-nowrap bg-gray-900 text-white shadow-sm">All</button>
                     <button onclick="setAudienceFilter('business')" id="aud-business" class="aud-btn px-3.5 py-1.5 rounded-xl text-xs font-medium transition-all whitespace-nowrap bg-gray-100 text-gray-600 hover:bg-gray-200">Small Business 💼</button>
@@ -122,7 +123,7 @@
                     <button onclick="setAudienceFilter('creators')" id="aud-creators" class="aud-btn px-3.5 py-1.5 rounded-xl text-xs font-medium transition-all whitespace-nowrap bg-gray-100 text-gray-600 hover:bg-gray-200">Creators 🎨</button>
                 </div>
 
-                <!-- Format Platform Filters (NO EMOJIS) -->
+                <!-- Format Filters (NO Emojis) -->
                 <div class="flex items-center justify-center gap-1.5 overflow-x-auto hide-scrollbar text-xs border-t border-gray-100 pt-3">
                     <button onclick="setPlatformFilter('all')" id="plat-all" class="plat-btn font-semibold text-rose-600 underline underline-offset-4 px-2 py-1">All Formats</button>
                     <button onclick="setPlatformFilter('Spreadsheet')" id="plat-Spreadsheet" class="plat-btn text-gray-500 hover:text-gray-900 px-2 py-1">Spreadsheets</button>
@@ -130,32 +131,29 @@
                     <button onclick="setPlatformFilter('CV / Resume')" id="plat-CV / Resume" class="plat-btn text-gray-500 hover:text-gray-900 px-2 py-1">CV / Resume</button>
                     <button onclick="setPlatformFilter('Portfolio HTML')" id="plat-Portfolio HTML" class="plat-btn text-gray-500 hover:text-gray-900 px-2 py-1">Portfolio HTML</button>
                     <button onclick="setPlatformFilter('Notion System')" id="plat-Notion System" class="plat-btn text-gray-500 hover:text-gray-900 px-2 py-1">Notion</button>
+                    <button onclick="setPlatformFilter('Social Media Kit')" id="plat-Social Media Kit" class="plat-btn text-gray-500 hover:text-gray-900 px-2 py-1">Social Media</button>
                 </div>
             </div>
         </section>
 
-        <!-- Product Grid Section -->
         <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-24">
             <div id="product-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                <!-- Dynamically Rendered Products -->
+                <!-- Products dynamically rendered -->
             </div>
 
-            <!-- Empty Search State -->
             <div id="empty-state" class="hidden text-center py-16 px-4">
                 <div class="w-16 h-16 bg-rose-50 text-rose-500 rounded-full flex items-center justify-center mx-auto mb-4 font-bold text-xl">!</div>
                 <h3 class="text-lg font-bold text-gray-900 mb-1">No templates found</h3>
-                <p class="text-sm text-gray-500 max-w-sm mx-auto">Try clearing your search query or choosing a different format category.</p>
+                <p class="text-sm text-gray-500 max-w-sm mx-auto">Try adjusting your filters or search keywords.</p>
             </div>
         </section>
     </main>
 
-    <!-- Footer -->
     <footer class="border-t border-gray-100 py-8 bg-gray-50/50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-gray-500">
             <p>&copy; CheemsCraft Templates & UI Kits. All rights reserved.</p>
             <div class="flex items-center space-x-4">
                 <span id="geo-status" class="text-gray-400">Detecting Region...</span>
-                <!-- Super tiny discreet link in bottom right corner -->
                 <button onclick="promptCreatorAccess()" class="text-[10px] text-gray-400 hover:text-gray-600 transition underline">
                     creator portal
                 </button>
@@ -163,10 +161,8 @@
         </div>
     </footer>
 
-    <!-- Product Preview & Interactive Viewport Modal -->
     <div id="preview-modal" class="fixed inset-0 z-50 bg-gray-900/60 backdrop-blur-sm hidden flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
         <div class="bg-white rounded-3xl max-w-4xl w-full overflow-hidden shadow-2xl my-auto max-h-[92vh] flex flex-col transform transition-all">
-            <!-- Modal Header -->
             <div class="px-6 py-4 border-b border-gray-100 flex items-center justify-between bg-white sticky top-0 z-10">
                 <div class="flex items-center space-x-2">
                     <span id="modal-platform-badge" class="bg-rose-50 text-rose-600 text-xs px-2.5 py-1 rounded-full font-semibold">Platform</span>
@@ -177,9 +173,7 @@
                 </button>
             </div>
 
-            <!-- Modal Content Body -->
             <div class="p-6 overflow-y-auto space-y-6">
-                <!-- Device Viewport Toggle -->
                 <div class="flex items-center justify-between border-b border-gray-100 pb-3">
                     <h2 id="modal-title" class="text-2xl font-bold text-gray-900">Template Title</h2>
                     <div class="flex items-center bg-gray-100 p-1 rounded-xl text-xs font-semibold">
@@ -189,7 +183,6 @@
                     </div>
                 </div>
 
-                <!-- Preview Frame -->
                 <div id="device-wrapper" class="w-full bg-gray-50 rounded-2xl border border-gray-200 p-3 flex items-center justify-center transition-all duration-300 mx-auto">
                     <div id="device-screen" class="w-full transition-all duration-300 bg-white rounded-xl overflow-hidden shadow-sm border border-gray-100">
                         <div id="media-container" class="relative aspect-video bg-gray-900 flex items-center justify-center overflow-hidden">
@@ -199,13 +192,11 @@
                     </div>
                 </div>
 
-                <!-- Media Switcher Tabs -->
-                <div id="media-tabs" class="flex space-x-2 border-b border-gray-100 pb-3 hidden">
+                <div id="modal-tabs" class="flex space-x-2 border-b border-gray-100 pb-3 hidden">
                     <button onclick="switchMediaTab('image')" id="tab-image" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-gray-900 text-white">Sample Image</button>
                     <button onclick="switchMediaTab('video')" id="tab-video" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-gray-100 text-gray-600 hover:bg-gray-200">Video Walkthrough Demo</button>
                 </div>
 
-                <!-- Template Description -->
                 <div class="space-y-4">
                     <div>
                         <h4 class="text-xs uppercase font-bold text-gray-400 tracking-wider mb-1">Brief Explanation</h4>
@@ -214,14 +205,11 @@
 
                     <div>
                         <h4 class="text-xs uppercase font-bold text-gray-400 tracking-wider mb-2">Key Highlights</h4>
-                        <ul id="modal-features" class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs text-gray-700">
-                            <!-- Dynamically loaded bullets -->
-                        </ul>
+                        <ul id="modal-features" class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs text-gray-700"></ul>
                     </div>
                 </div>
             </div>
 
-            <!-- Modal Purchase Footer -->
             <div class="p-6 bg-gray-50 border-t border-gray-100 flex items-center justify-between sticky bottom-0 z-10">
                 <div>
                     <span class="text-xs text-gray-400 font-medium block">Instant Direct Download</span>
@@ -235,7 +223,45 @@
         </div>
     </div>
 
-    <!-- Product Form Modal (Creator CMS) -->
+    <div id="config-modal" class="fixed inset-0 z-50 bg-gray-900/60 backdrop-blur-sm hidden flex items-center justify-center p-4 overflow-y-auto">
+        <div class="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl my-auto">
+            <div class="flex items-center justify-between border-b border-gray-100 pb-3 mb-4">
+                <h3 class="text-lg font-bold text-gray-900">Firebase Firestore Setup</h3>
+                <button onclick="closeConfigModal()" class="text-gray-400 hover:text-gray-600">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+            </div>
+            <p class="text-xs text-gray-500 mb-4 leading-relaxed">Paste your Firebase Project Web Configuration keys below to enable 24/7 cloud sync without file re-uploads.</p>
+            <form onsubmit="handleConfigSubmit(event)" class="space-y-3 text-xs">
+                <div>
+                    <label class="block font-bold text-gray-700 mb-1">apiKey *</label>
+                    <input type="text" id="cfg-apiKey" required class="w-full border border-gray-200 rounded-xl p-2.5 font-mono">
+                </div>
+                <div>
+                    <label class="block font-bold text-gray-700 mb-1">authDomain *</label>
+                    <input type="text" id="cfg-authDomain" required class="w-full border border-gray-200 rounded-xl p-2.5 font-mono">
+                </div>
+                <div>
+                    <label class="block font-bold text-gray-700 mb-1">projectId *</label>
+                    <input type="text" id="cfg-projectId" required class="w-full border border-gray-200 rounded-xl p-2.5 font-mono">
+                </div>
+                <div>
+                    <label class="block font-bold text-gray-700 mb-1">storageBucket</label>
+                    <input type="text" id="cfg-storageBucket" class="w-full border border-gray-200 rounded-xl p-2.5 font-mono">
+                </div>
+                <div>
+                    <label class="block font-bold text-gray-700 mb-1">appId *</label>
+                    <input type="text" id="cfg-appId" required class="w-full border border-gray-200 rounded-xl p-2.5 font-mono">
+                </div>
+                <div class="pt-3 flex justify-end gap-2">
+                    <button type="button" onclick="closeConfigModal()" class="px-4 py-2 rounded-xl bg-gray-100 text-gray-700 font-semibold">Cancel</button>
+                    <button type="submit" class="px-5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-semibold">Save & Connect</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Product Form Modal -->
     <div id="creator-modal" class="fixed inset-0 z-50 bg-gray-900/60 backdrop-blur-sm hidden flex items-center justify-center p-4 overflow-y-auto">
         <div class="bg-white rounded-3xl max-w-xl w-full p-6 shadow-2xl my-auto">
             <div class="flex items-center justify-between border-b border-gray-100 pb-3 mb-4">
@@ -250,13 +276,13 @@
                 
                 <div>
                     <label class="block font-bold text-gray-700 mb-1">Product Title *</label>
-                    <input type="text" id="form-title" required class="w-full border border-gray-200 rounded-xl p-2.5 focus:ring-2 focus:ring-rose-200 focus:outline-none" placeholder="e.g. Automated Small Business Monthly Expense Tracker">
+                    <input type="text" id="form-title" required class="w-full border border-gray-200 rounded-xl p-2.5" placeholder="e.g. Automated Small Business Monthly Expense Tracker">
                 </div>
 
                 <div class="grid grid-cols-2 gap-3">
                     <div>
                         <label class="block font-bold text-gray-700 mb-1">Platform Format *</label>
-                        <select id="form-platform" required class="w-full border border-gray-200 rounded-xl p-2.5 bg-white focus:ring-2 focus:ring-rose-200 focus:outline-none">
+                        <select id="form-platform" required class="w-full border border-gray-200 rounded-xl p-2.5 bg-white">
                             <option value="Spreadsheet">Spreadsheet (Sheets/Excel)</option>
                             <option value="Canva Template">Canva Template</option>
                             <option value="CV / Resume">CV / Resume Pack</option>
@@ -267,7 +293,7 @@
                     </div>
                     <div>
                         <label class="block font-bold text-gray-700 mb-1">Target Audience *</label>
-                        <select id="form-audience" required class="w-full border border-gray-200 rounded-xl p-2.5 bg-white focus:ring-2 focus:ring-rose-200 focus:outline-none">
+                        <select id="form-audience" required class="w-full border border-gray-200 rounded-xl p-2.5 bg-white">
                             <option value="business">Small Business 💼</option>
                             <option value="students">Students 🎓</option>
                             <option value="employees">Employees 🏢</option>
@@ -279,32 +305,32 @@
                 <div class="grid grid-cols-2 gap-3">
                     <div>
                         <label class="block font-bold text-gray-700 mb-1">Base Price in PHP (₱) *</label>
-                        <input type="number" id="form-price" step="0.01" required class="w-full border border-gray-200 rounded-xl p-2.5 focus:ring-2 focus:ring-rose-200 focus:outline-none" placeholder="299.00">
+                        <input type="number" id="form-price" step="0.01" required class="w-full border border-gray-200 rounded-xl p-2.5" placeholder="299.00">
                     </div>
                     <div>
-                        <label class="block font-bold text-gray-700 mb-1">Checkout URL (Raket.ph / PayMongo) *</label>
-                        <input type="url" id="form-checkout" required class="w-full border border-gray-200 rounded-xl p-2.5 focus:ring-2 focus:ring-rose-200 focus:outline-none" placeholder="https://raket.ph/youritem">
+                        <label class="block font-bold text-gray-700 mb-1">Checkout URL (Raket.ph) *</label>
+                        <input type="url" id="form-checkout" required class="w-full border border-gray-200 rounded-xl p-2.5" placeholder="https://raket.ph/youritem">
                     </div>
                 </div>
 
                 <div>
                     <label class="block font-bold text-gray-700 mb-1">Sample Image / Cover Thumbnail URL *</label>
-                    <input type="url" id="form-image" required class="w-full border border-gray-200 rounded-xl p-2.5 focus:ring-2 focus:ring-rose-200 focus:outline-none" placeholder="https://images.unsplash.com/...">
+                    <input type="url" id="form-image" required class="w-full border border-gray-200 rounded-xl p-2.5" placeholder="https://images.unsplash.com/...">
                 </div>
 
                 <div>
                     <label class="block font-bold text-gray-700 mb-1">Video Tutorial YouTube Embed URL (Optional)</label>
-                    <input type="url" id="form-video" class="w-full border border-gray-200 rounded-xl p-2.5 focus:ring-2 focus:ring-rose-200 focus:outline-none" placeholder="https://www.youtube.com/embed/...">
+                    <input type="url" id="form-video" class="w-full border border-gray-200 rounded-xl p-2.5" placeholder="https://www.youtube.com/embed/...">
                 </div>
 
                 <div>
                     <label class="block font-bold text-gray-700 mb-1">Brief Product Explanation *</label>
-                    <textarea id="form-description" rows="3" required class="w-full border border-gray-200 rounded-xl p-2.5 focus:ring-2 focus:ring-rose-200 focus:outline-none" placeholder="Explain what this tool does and how it saves time..."></textarea>
+                    <textarea id="form-description" rows="3" required class="w-full border border-gray-200 rounded-xl p-2.5" placeholder="Explain how this tool saves time..."></textarea>
                 </div>
 
                 <div>
                     <label class="block font-bold text-gray-700 mb-1">Key Features List (Comma Separated)</label>
-                    <input type="text" id="form-features" class="w-full border border-gray-200 rounded-xl p-2.5 focus:ring-2 focus:ring-rose-200 focus:outline-none" placeholder="Automated Calculations, Mobile Friendly, Free Updates">
+                    <input type="text" id="form-features" class="w-full border border-gray-200 rounded-xl p-2.5" placeholder="Automated Calculations, Mobile Friendly, Free Updates">
                 </div>
 
                 <div class="pt-3 flex justify-end gap-2">
@@ -315,9 +341,8 @@
         </div>
     </div>
 
-    <!-- Application Script Engine -->
     <script>
-        // Storefront Products Dataset (Backed in single file)
+        // Core State
         let products = [
             {
                 id: "item-1",
@@ -345,13 +370,14 @@
             }
         ];
 
+        let db = null;
+        let isFirebaseConnected = false;
         let isCreatorMode = false;
         let logoClickCount = 0;
         let selectedAudience = 'all';
         let selectedPlatform = 'all';
         let activeCurrency = 'PHP';
 
-        // Rates & Symbols (PHP Base)
         const exchangeRates = {
             PHP: 1, USD: 0.018, SGD: 0.024, MYR: 0.084, IDR: 280.0,
             THB: 0.64, VND: 440.0, EUR: 0.016, GBP: 0.014, AUD: 0.027, JPY: 2.65
@@ -362,17 +388,82 @@
             THB: '฿', VND: '₫', EUR: '€', GBP: '£', AUD: 'A$', JPY: '¥'
         };
 
-        // App Initialization
         document.addEventListener('DOMContentLoaded', () => {
-            loadLocalProducts();
+            initFirebase();
             detectGeoCurrency();
-            renderStorefront();
+            if (!isFirebaseConnected) {
+                loadLocalProducts();
+                renderStorefront();
+            }
         });
+
+        // Initialize Firebase Firestore
+        function initFirebase() {
+            const savedCfg = localStorage.getItem('cheemscraft_firebase_cfg');
+            if (savedCfg) {
+                try {
+                    const cfg = JSON.parse(savedCfg);
+                    if (!firebase.apps.length) {
+                        firebase.initializeApp(cfg);
+                    }
+                    db = firebase.firestore();
+                    isFirebaseConnected = true;
+                    document.getElementById('cms-status-text').textContent = "Creator CMS Active (Firebase Cloud Sync)";
+                    
+                    // Listen in real-time
+                    db.collection('products').onSnapshot(snapshot => {
+                        const fetched = [];
+                        snapshot.forEach(doc => {
+                            fetched.push({ id: doc.id, ...doc.data() });
+                        });
+                        if (fetched.length > 0) {
+                            products = fetched;
+                            renderStorefront();
+                        }
+                    }, err => {
+                        console.error("Firestore sync error:", err);
+                    });
+                } catch(e) {
+                    console.error("Firebase Initialization Failed", e);
+                }
+            }
+        }
+
+        function openConfigModal() {
+            const savedCfg = localStorage.getItem('cheemscraft_firebase_cfg');
+            if (savedCfg) {
+                const cfg = JSON.parse(savedCfg);
+                document.getElementById('cfg-apiKey').value = cfg.apiKey || '';
+                document.getElementById('cfg-authDomain').value = cfg.authDomain || '';
+                document.getElementById('cfg-projectId').value = cfg.projectId || '';
+                document.getElementById('cfg-storageBucket').value = cfg.storageBucket || '';
+                document.getElementById('cfg-appId').value = cfg.appId || '';
+            }
+            document.getElementById('config-modal').classList.remove('hidden');
+        }
+
+        function closeConfigModal() {
+            document.getElementById('config-modal').classList.add('hidden');
+        }
+
+        function handleConfigSubmit(e) {
+            e.preventDefault();
+            const cfg = {
+                apiKey: document.getElementById('cfg-apiKey').value,
+                authDomain: document.getElementById('cfg-authDomain').value,
+                projectId: document.getElementById('cfg-projectId').value,
+                storageBucket: document.getElementById('cfg-storageBucket').value,
+                appId: document.getElementById('cfg-appId').value
+            };
+            localStorage.setItem('cheemscraft_firebase_cfg', JSON.stringify(cfg));
+            closeConfigModal();
+            location.reload();
+        }
 
         function loadLocalProducts() {
             const saved = localStorage.getItem('cheemscraft_products');
             if (saved) {
-                try { products = JSON.parse(saved); } catch(e) { console.error(e); }
+                try { products = JSON.parse(saved); } catch(e) {}
             }
         }
 
@@ -380,7 +471,6 @@
             localStorage.setItem('cheemscraft_products', JSON.stringify(products));
         }
 
-        // Automatic Geolocation Currency Picker
         async function detectGeoCurrency() {
             const geoEl = document.getElementById('geo-status');
             try {
@@ -396,9 +486,7 @@
                         return;
                     }
                 }
-            } catch (e) {
-                console.log('Geo detection fallback');
-            }
+            } catch (e) {}
             geoEl.textContent = 'Region: Global (PHP)';
         }
 
@@ -418,7 +506,6 @@
             return `${symbol}${converted.toFixed(2)}`;
         }
 
-        // Secret Creator CMS Triggers
         function handleLogoClick() {
             logoClickCount++;
             if (logoClickCount >= 3) {
@@ -443,15 +530,11 @@
         function toggleCreatorMode(active) {
             isCreatorMode = active;
             const bar = document.getElementById('creator-bar');
-            if (active) {
-                bar.classList.remove('hidden');
-            } else {
-                bar.classList.add('hidden');
-            }
+            if (active) bar.classList.remove('hidden');
+            else bar.classList.add('hidden');
             renderStorefront();
         }
 
-        // Category Filter Controls
         function setAudienceFilter(aud) {
             selectedAudience = aud;
             document.querySelectorAll('.aud-btn').forEach(btn => {
@@ -472,7 +555,6 @@
             renderStorefront();
         }
 
-        // Main Store Render Algorithm
         function renderStorefront() {
             const grid = document.getElementById('product-grid');
             const empty = document.getElementById('empty-state');
@@ -536,7 +618,6 @@
             });
         }
 
-        // Preview & Detail Modal Engine
         function openPreviewModal(id) {
             const item = products.find(p => p.id === id);
             if (!item) return;
@@ -551,7 +632,6 @@
             document.getElementById('modal-price').textContent = formatPrice(item.price);
             document.getElementById('modal-buy-link').href = item.checkout;
 
-            // Media Embed Switching
             const imgEl = document.getElementById('modal-image');
             const vidEl = document.getElementById('modal-video');
             const tabsEl = document.getElementById('modal-tabs');
@@ -568,10 +648,9 @@
                 vidEl.src = '';
             }
 
-            // Highlights
             const featEl = document.getElementById('modal-features');
             featEl.innerHTML = '';
-            item.features.forEach(f => {
+            (item.features || []).forEach(f => {
                 const li = document.createElement('li');
                 li.className = "flex items-center space-x-2";
                 li.innerHTML = `<span class="w-1.5 h-1.5 bg-rose-500 rounded-full"></span><span>${f}</span>`;
@@ -628,7 +707,6 @@
             }
         }
 
-        // Creator CMS Handlers
         function openProductModal(editId = null) {
             const form = document.getElementById('product-form');
             form.reset();
@@ -646,7 +724,7 @@
                     document.getElementById('form-image').value = item.image;
                     document.getElementById('form-video').value = item.video || '';
                     document.getElementById('form-description').value = item.description;
-                    document.getElementById('form-features').value = item.features.join(', ');
+                    document.getElementById('form-features').value = (item.features || []).join(', ');
                 }
             } else {
                 document.getElementById('creator-modal-title').textContent = "Add New Template Listing";
@@ -659,14 +737,13 @@
             document.getElementById('creator-modal').classList.add('hidden');
         }
 
-        function handleProductSubmit(e) {
+        async function handleProductSubmit(e) {
             e.preventDefault();
             const id = document.getElementById('form-id').value || 'item-' + Date.now();
             const featsRaw = document.getElementById('form-features').value;
             const features = featsRaw ? featsRaw.split(',').map(s => s.trim()).filter(Boolean) : [];
 
             const newItem = {
-                id,
                 title: document.getElementById('form-title').value,
                 platform: document.getElementById('form-platform').value,
                 audience: document.getElementById('form-audience').value,
@@ -678,36 +755,45 @@
                 features
             };
 
-            const index = products.findIndex(p => p.id === id);
-            if (index > -1) {
-                products[index] = newItem;
+            if (isFirebaseConnected && db) {
+                try {
+                    await db.collection('products').doc(id).set(newItem, { merge: true });
+                } catch(err) {
+                    console.error("Firebase save error", err);
+                }
             } else {
-                products.push(newItem);
+                const index = products.findIndex(p => p.id === id);
+                if (index > -1) products[index] = { id, ...newItem };
+                else products.push({ id, ...newItem });
+                saveLocalProducts();
+                renderStorefront();
             }
 
-            saveLocalProducts();
             closeCreatorModal();
-            renderStorefront();
         }
 
         function editProduct(id) {
             openProductModal(id);
         }
 
-        function deleteProduct(id) {
+        async function deleteProduct(id) {
             if (confirm("Are you sure you want to delete this template listing?")) {
-                products = products.filter(p => p.id !== id);
-                saveLocalProducts();
-                renderStorefront();
+                if (isFirebaseConnected && db) {
+                    try {
+                        await db.collection('products').doc(id).delete();
+                    } catch(err) {
+                        console.error("Firebase delete error", err);
+                    }
+                } else {
+                    products = products.filter(p => p.id !== id);
+                    saveLocalProducts();
+                    renderStorefront();
+                }
             }
         }
 
-        // Single-File Export Helper
         function exportHTMLCode() {
-            // Bake active products into JS array
-            const scriptTag = document.querySelector('script:not([src])');
             let code = document.documentElement.outerHTML;
-
             const exportedProductsString = `let products = ${JSON.stringify(products, null, 12)};`;
             code = code.replace(/let products = \[\s*[\s\S]*?\n\s*\];/, exportedProductsString);
 

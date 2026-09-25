@@ -131,7 +131,7 @@
             </p>
 
             <div class="flex justify-center mb-8">
-                <a id="send-message-link" href="#" target="_blank" rel="noopener" class="inline-flex items-center gap-2 bg-gray-900 hover:bg-gray-800 text-white text-sm font-semibold px-5 py-3 rounded-2xl transition shadow-sm cursor-pointer">
+                <a id="send-message-link" href="#" onclick="return handleSendMessageClick(event)" target="_blank" rel="noopener" class="inline-flex items-center gap-2 bg-gray-900 hover:bg-gray-800 text-white text-sm font-semibold px-5 py-3 rounded-2xl transition shadow-sm cursor-pointer">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
                     <span>Send us a message</span>
                 </a>
@@ -812,9 +812,25 @@ I want to make a template request.
    (write here)
 
 Thank you!`;
-            const mailto = `mailto:rbrbatenga@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+            const gmailUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent('rbrbatenga@gmail.com')}&su=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+            const mailtoUrl = `mailto:rbrbatenga@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
             const link = document.getElementById('send-message-link');
-            if (link) link.setAttribute('href', mailto);
+            if (link) {
+                link.setAttribute('href', gmailUrl);
+                link.dataset.mailtoFallback = mailtoUrl;
+            }
+        }
+
+        function handleSendMessageClick(e) {
+            e.preventDefault();
+            const link = document.getElementById('send-message-link');
+            const gmailUrl = link.getAttribute('href');
+            const mailtoUrl = link.dataset.mailtoFallback;
+            const win = window.open(gmailUrl, '_blank');
+            if (!win || win.closed || typeof win.closed === 'undefined') {
+                window.location.href = mailtoUrl;
+            }
+            return false;
         }
 
         function handleCurrencyChange(val) {

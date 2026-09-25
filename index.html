@@ -126,9 +126,16 @@
             <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-gray-900 tracking-tight leading-[1.15] mb-6">
                 Practical digital tools designed to <span class="font-serif italic font-normal gradient-text text-5xl sm:text-6xl lg:text-7xl">save you time</span>
             </h1>
-            <p class="text-base sm:text-lg text-gray-600 max-w-2xl mx-auto font-normal leading-relaxed mb-8">
+            <p class="text-base sm:text-lg text-gray-600 max-w-2xl mx-auto font-normal leading-relaxed mb-6">
                 Ready-to-use Canva graphics, CVs, spreadsheets, Notion systems, website templates, and many more tools built for real work.
             </p>
+
+            <div class="flex justify-center mb-8">
+                <button onclick="openMessageEmail()" class="inline-flex items-center gap-2 bg-gray-900 hover:bg-gray-800 text-white text-sm font-semibold px-5 py-3 rounded-2xl transition shadow-sm">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                    <span>Send us a message</span>
+                </button>
+            </div>
 
             <div class="max-w-xl mx-auto space-y-4">
                 <!-- Search Input -->
@@ -161,6 +168,11 @@
 
         <!-- Product Grid Section -->
         <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-24">
+            <div id="grid-loading" class="hidden flex-col items-center justify-center py-24">
+                <div class="w-12 h-12 border-4 border-gray-200 border-t-rose-500 rounded-full animate-spin"></div>
+                <p class="mt-4 text-xs font-medium text-gray-400">Loading the latest templates...</p>
+            </div>
+
             <div id="product-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                 <!-- Products dynamically rendered via JavaScript -->
             </div>
@@ -250,10 +262,9 @@
             <div class="p-6 overflow-y-auto space-y-6">
                 <div class="flex flex-wrap items-center justify-between gap-4 border-b border-gray-100 pb-3">
                     <h2 id="modal-title" class="text-2xl font-bold text-gray-900">Template Title</h2>
-                    <div class="flex items-center bg-gray-100 p-1 rounded-xl text-xs font-semibold">
-                        <button onclick="setDeviceViewport('desktop')" id="view-desktop" class="px-3 py-1 rounded-lg bg-white shadow-sm text-gray-900">Desktop</button>
-                        <button onclick="setDeviceViewport('tablet')" id="view-tablet" class="px-3 py-1 rounded-lg text-gray-500 hover:text-gray-900">Tablet</button>
-                        <button onclick="setDeviceViewport('mobile')" id="view-mobile" class="px-3 py-1 rounded-lg text-gray-500 hover:text-gray-900">Mobile</button>
+                    <div class="flex items-center gap-1.5">
+                        <span class="text-[10px] uppercase font-bold text-gray-400">Compatible:</span>
+                        <div id="modal-device-badges" class="flex items-center gap-1.5"></div>
                     </div>
                 </div>
 
@@ -433,6 +444,25 @@
                     </div>
                 </div>
 
+                <!-- Device Compatibility Checklist -->
+                <div>
+                    <label class="block font-bold text-gray-700 mb-1.5">Compatible Devices</label>
+                    <div class="grid grid-cols-3 gap-2 bg-gray-50 p-3 rounded-xl border border-gray-100">
+                        <label class="flex items-center space-x-2 text-gray-700 cursor-pointer">
+                            <input type="checkbox" name="form-device-check" value="desktop" class="rounded text-rose-500 focus:ring-rose-400">
+                            <span>Desktop</span>
+                        </label>
+                        <label class="flex items-center space-x-2 text-gray-700 cursor-pointer">
+                            <input type="checkbox" name="form-device-check" value="tablet" class="rounded text-rose-500 focus:ring-rose-400">
+                            <span>Tablet</span>
+                        </label>
+                        <label class="flex items-center space-x-2 text-gray-700 cursor-pointer">
+                            <input type="checkbox" name="form-device-check" value="mobile" class="rounded text-rose-500 focus:ring-rose-400">
+                            <span>Mobile</span>
+                        </label>
+                    </div>
+                </div>
+
                 <!-- Dual Listing Method Selection -->
                 <div class="bg-gray-50 p-3.5 rounded-2xl border border-gray-200/80 space-y-3">
                     <label class="block font-bold text-gray-800">Checkout & Fulfillment Type *</label>
@@ -532,6 +562,11 @@
                 </button>
             </div>
 
+            <div class="flex items-center gap-2 mb-1">
+                <button onclick="setOrdersFilter('active')" id="orders-filter-active" class="px-3 py-1.5 rounded-xl text-xs font-semibold transition bg-gray-900 text-white">Active</button>
+                <button onclick="setOrdersFilter('archived')" id="orders-filter-archived" class="px-3 py-1.5 rounded-xl text-xs font-semibold transition bg-gray-100 text-gray-600 hover:bg-gray-200">Archived</button>
+            </div>
+
             <div class="overflow-y-auto flex-grow space-y-4">
                 <div id="orders-list-container">
                     <!-- Orders dynamically listed here -->
@@ -604,51 +639,9 @@
             measurementId: "G-F2SRGK1G3D"
         };
 
-        // Default Catalog Items
-        let products = [
-            {
-                id: "item-1",
-                title: "Automated Small Business Income & Expense Tracker",
-                platform: "Spreadsheet",
-                audiences: ["business"],
-                price: 299,
-                listingType: "local",
-                image: "https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?auto=format&fit=crop&w=800&q=80",
-                aspectRatio: "aspect-4-3",
-                objectFit: "object-cover",
-                description: "A clean, color-coded Google Sheets & Excel template built specifically for small business owners and freelancers to effortlessly monitor cash flow, tax calculations, and profit margins.",
-                features: ["Automated Monthly Visual Dashboards", "Tax Computation Formulas Built-In", "Google Sheets & Excel Compatible", "Free Lifetime Updates"],
-                checkout: "https://raket.ph"
-            },
-            {
-                id: "item-2",
-                title: "Minimalist Modern Portfolio & Resume HTML Kit",
-                platform: "Portfolio HTML",
-                audiences: ["creators", "employees"],
-                price: 499,
-                listingType: "raket",
-                image: "https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?auto=format&fit=crop&w=800&q=80",
-                aspectRatio: "aspect-16-9",
-                objectFit: "object-cover",
-                description: "A sleek, lightweight single-page HTML/Tailwind portfolio built for creators, designers, and developers to display project work with typography.",
-                features: ["Pure HTML/CSS - Fast Loading", "Mobile Responsive Layout", "Integrated Project Preview Modals", "Clean Minimalist Typography"],
-                checkout: "https://raket.ph"
-            },
-            {
-                id: "item-3",
-                title: "All-in-One Academic Student Hub Notion Template",
-                platform: "Notion System",
-                audiences: ["students"],
-                price: 199,
-                listingType: "local",
-                image: "https://images.unsplash.com/photo-1517842645767-c639042777db?auto=format&fit=crop&w=800&q=80",
-                aspectRatio: "aspect-4-3",
-                objectFit: "object-cover",
-                description: "A complete workspace for students to track course assignments, GPA progress, exam schedules, and daily habit logs seamlessly.",
-                features: ["Automated Grade Calculation", "Weekly Schedule Planner", "Reading & Resource Database", "Mobile Notion App Friendly"],
-                checkout: "https://raket.ph"
-            }
-        ];
+        // Live catalog - populated only from Firestore / local saved data, never sample data
+        let products = [];
+        let isLoadingProducts = true;
 
         let orders = [];
 
@@ -659,6 +652,7 @@
         let selectedAudience = 'all';
         let selectedPlatform = 'all';
         let activeCurrency = 'PHP';
+        let ordersFilter = 'active';
 
         const exchangeRates = {
             PHP: 1, USD: 0.018, SGD: 0.024, MYR: 0.084, IDR: 280.0,
@@ -671,13 +665,10 @@
         };
 
         document.addEventListener('DOMContentLoaded', () => {
+            isLoadingProducts = true;
+            renderStorefront();
             initFirebase();
             detectGeoCurrency();
-            if (!isFirebaseConnected) {
-                loadLocalProducts();
-                loadLocalOrders();
-                renderStorefront();
-            }
         });
 
         function initFirebase() {
@@ -696,16 +687,16 @@
                     snapshot.forEach(doc => {
                         fetched.push({ id: doc.id, ...doc.data() });
                     });
-                    if (fetched.length > 0) {
-                        products = fetched;
-                        saveLocalProducts();
-                    }
+                    products = fetched;
+                    saveLocalProducts();
+                    isLoadingProducts = false;
                     renderStorefront();
                 }, err => {
                     console.warn("Firestore templates error, fallback to local:", err);
                     isFirebaseConnected = false;
                     updateCMSStatus(false, "Local Offline Storage Mode");
                     loadLocalProducts();
+                    isLoadingProducts = false;
                     renderStorefront();
                 });
 
@@ -726,6 +717,7 @@
                 updateCMSStatus(false, "Local Offline Storage Mode");
                 loadLocalProducts();
                 loadLocalOrders();
+                isLoadingProducts = false;
                 renderStorefront();
             }
         }
@@ -797,6 +789,30 @@
                 }
             } catch (e) {}
             geoEl.textContent = 'Region: Global (PHP)';
+        }
+
+        function openMessageEmail() {
+            const subject = "Template Request - CheemsCraft";
+            const body =
+`Hi CheemsCraft team,
+
+I want to make a template request.
+
+1) Describe what template you need:
+   (write here)
+
+2) What kind of template? (Choose one or describe: CV/Resume, Canva Graphic, Portfolio Website, Notion System, Spreadsheet, Social Media Kit, Animation Request, Other):
+   (write here)
+
+3) Do you want us to edit everything for you, or just provide the template file?
+   (write here)
+
+4) Additional notes (e.g. help editing a template you already purchased, custom animation, deadline, etc.):
+   (write here)
+
+Thank you!`;
+            const mailto = `mailto:rbrbatenga@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+            window.location.href = mailto;
         }
 
         function handleCurrencyChange(val) {
@@ -881,7 +897,19 @@
         function renderStorefront() {
             const grid = document.getElementById('product-grid');
             const empty = document.getElementById('empty-state');
+            const loading = document.getElementById('grid-loading');
             const search = document.getElementById('search-input').value.toLowerCase();
+
+            if (isLoadingProducts) {
+                grid.classList.add('hidden');
+                empty.classList.add('hidden');
+                loading.classList.remove('hidden');
+                loading.classList.add('flex');
+                return;
+            }
+            loading.classList.add('hidden');
+            loading.classList.remove('flex');
+            grid.classList.remove('hidden');
 
             grid.innerHTML = '';
 
@@ -1008,7 +1036,7 @@
                 featEl.appendChild(li);
             });
 
-            setDeviceViewport('desktop');
+            renderDeviceBadges(item.devices || []);
             document.getElementById('preview-modal').classList.remove('hidden');
         }
 
@@ -1016,26 +1044,23 @@
             document.getElementById('preview-modal').classList.add('hidden');
         }
 
-        function setDeviceViewport(view) {
-            const wrap = document.getElementById('device-screen');
-            const btnD = document.getElementById('view-desktop');
-            const btnT = document.getElementById('view-tablet');
-            const btnM = document.getElementById('view-mobile');
-
-            btnD.className = "px-3 py-1 rounded-lg text-gray-500 hover:text-gray-900";
-            btnT.className = "px-3 py-1 rounded-lg text-gray-500 hover:text-gray-900";
-            btnM.className = "px-3 py-1 rounded-lg text-gray-500 hover:text-gray-900";
-
-            if (view === 'desktop') {
-                wrap.style.maxWidth = '100%';
-                btnD.className = "px-3 py-1 rounded-lg bg-white shadow-sm text-gray-900";
-            } else if (view === 'tablet') {
-                wrap.style.maxWidth = '640px';
-                btnT.className = "px-3 py-1 rounded-lg bg-white shadow-sm text-gray-900";
-            } else if (view === 'mobile') {
-                wrap.style.maxWidth = '375px';
-                btnM.className = "px-3 py-1 rounded-lg bg-white shadow-sm text-gray-900";
+        function renderDeviceBadges(devices) {
+            const deviceMap = { desktop: 'Desktop', tablet: 'Tablet', mobile: 'Mobile' };
+            const container = document.getElementById('modal-device-badges');
+            container.innerHTML = '';
+            if (!devices || devices.length === 0) {
+                const badge = document.createElement('span');
+                badge.className = "bg-gray-100 text-gray-400 text-[10px] px-2.5 py-1 rounded-full font-semibold";
+                badge.textContent = "Not specified";
+                container.appendChild(badge);
+                return;
             }
+            devices.forEach(d => {
+                const badge = document.createElement('span');
+                badge.className = "bg-gray-100 text-gray-700 text-[10px] px-2.5 py-1 rounded-full font-semibold";
+                badge.textContent = deviceMap[d] || d;
+                container.appendChild(badge);
+            });
         }
 
         // Local GCash Checkout Modal
@@ -1093,6 +1118,7 @@
                 buyerFb: document.getElementById('buyer-fb').value || 'Not provided',
                 receiptData: receiptData,
                 status: 'Pending',
+                archived: false,
                 date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit' })
             };
 
@@ -1134,20 +1160,33 @@
             document.getElementById('orders-dashboard-modal').classList.add('hidden');
         }
 
+        function setOrdersFilter(filter) {
+            ordersFilter = filter;
+            const btnActive = document.getElementById('orders-filter-active');
+            const btnArchived = document.getElementById('orders-filter-archived');
+            const activeCls = "px-3 py-1.5 rounded-xl text-xs font-semibold transition bg-gray-900 text-white";
+            const inactiveCls = "px-3 py-1.5 rounded-xl text-xs font-semibold transition bg-gray-100 text-gray-600 hover:bg-gray-200";
+            btnActive.className = filter === 'active' ? activeCls : inactiveCls;
+            btnArchived.className = filter === 'archived' ? activeCls : inactiveCls;
+            renderOrdersList();
+        }
+
         function renderOrdersList() {
             const container = document.getElementById('orders-list-container');
             container.innerHTML = '';
 
-            if (orders.length === 0) {
+            const visibleOrders = orders.filter(o => ordersFilter === 'archived' ? !!o.archived : !o.archived);
+
+            if (visibleOrders.length === 0) {
                 container.innerHTML = `
                     <div class="text-center py-12 text-gray-400 text-xs">
-                        No orders recorded yet.
+                        ${ordersFilter === 'archived' ? 'No archived orders.' : 'No orders recorded yet.'}
                     </div>
                 `;
                 return;
             }
 
-            orders.forEach(ord => {
+            visibleOrders.forEach(ord => {
                 const card = document.createElement('div');
                 card.className = "bg-gray-50 border border-gray-200 rounded-2xl p-4 flex flex-col md:flex-row md:items-center justify-between gap-4 text-xs";
 
@@ -1186,10 +1225,48 @@
                                 Reset Pending
                             </button>
                         `}
+                        <button onclick="toggleArchiveOrder('${ord.id}')" class="bg-amber-100 hover:bg-amber-200 text-amber-800 px-3 py-2 rounded-xl font-semibold transition">
+                            ${ord.archived ? 'Unarchive' : 'Archive'}
+                        </button>
+                        <button onclick="deleteOrder('${ord.id}')" class="bg-rose-100 hover:bg-rose-200 text-rose-700 px-3 py-2 rounded-xl font-semibold transition">
+                            Delete
+                        </button>
                     </div>
                 `;
                 container.appendChild(card);
             });
+        }
+
+        async function toggleArchiveOrder(orderId) {
+            const ord = orders.find(o => o.id === orderId);
+            if (!ord) return;
+            ord.archived = !ord.archived;
+            if (isFirebaseConnected && db) {
+                try {
+                    await db.collection('orders').doc(orderId).update({ archived: ord.archived });
+                } catch(e) {
+                    console.error("Firestore archive update error:", e);
+                }
+            }
+            saveLocalOrders();
+            renderOrdersList();
+            updatePendingOrdersBadge();
+        }
+
+        async function deleteOrder(orderId) {
+            if (!confirm("Permanently delete this order? This cannot be undone.")) return;
+            if (isFirebaseConnected && db) {
+                try {
+                    await db.collection('orders').doc(orderId).delete();
+                } catch(e) {
+                    console.error("Firestore delete order error:", e);
+                }
+            } else {
+                orders = orders.filter(o => o.id !== orderId);
+                saveLocalOrders();
+            }
+            renderOrdersList();
+            updatePendingOrdersBadge();
         }
 
         function sendFulfillmentEmail(gmailUrl, recipientEmail) {
@@ -1303,6 +1380,11 @@
                         cb.checked = auds.includes(cb.value);
                     });
 
+                    const devs = Array.isArray(item.devices) ? item.devices : [];
+                    document.querySelectorAll('input[name="form-device-check"]').forEach(cb => {
+                        cb.checked = devs.includes(cb.value);
+                    });
+
                     document.getElementById('form-description').value = item.description;
                     document.getElementById('form-features').value = (item.features || []).join(', ');
                 }
@@ -1334,6 +1416,11 @@
                 return;
             }
 
+            const selectedDevices = [];
+            document.querySelectorAll('input[name="form-device-check"]:checked').forEach(cb => {
+                selectedDevices.push(cb.value);
+            });
+
             const listingType = document.querySelector('input[name="form-listing-type"]:checked').value;
             const imgData = document.getElementById('form-image-data').value || 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=800&q=80';
 
@@ -1341,6 +1428,7 @@
                 title: document.getElementById('form-title').value,
                 platform: document.getElementById('form-platform').value,
                 audiences: selectedAudiences,
+                devices: selectedDevices,
                 price: parseFloat(document.getElementById('form-price').value) || 0,
                 listingType: listingType,
                 checkout: document.getElementById('form-checkout').value || 'https://raket.ph',
@@ -1419,7 +1507,7 @@
         function exportHTMLCode() {
             let code = document.documentElement.outerHTML;
             const exportedProductsString = `let products = ${JSON.stringify(products, null, 12)};`;
-            code = code.replace(/let products = \[\s*[\s\S]*?\n\s*\];/, exportedProductsString);
+            code = code.replace(/let products = \[[\s\S]*?\];/, exportedProductsString);
 
             const blob = new Blob([code], { type: 'text/html' });
             const a = document.createElement('a');

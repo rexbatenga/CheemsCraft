@@ -339,7 +339,10 @@
 
             <div class="p-6 overflow-y-auto space-y-6">
                 <div class="flex flex-wrap items-center justify-between gap-4 border-b border-gray-100 pb-3">
-                    <h2 id="modal-title" class="text-2xl font-bold text-gray-900">Template Title</h2>
+                    <div>
+                        <h2 id="modal-title" class="text-2xl font-bold text-gray-900">Template Title</h2>
+                        <p id="modal-author" class="hidden text-xs font-semibold text-gray-400 mt-0.5">by: Author</p>
+                    </div>
                     <div class="flex items-center gap-1.5">
                         <span class="text-[10px] uppercase font-bold text-gray-400">Compatible:</span>
                         <div id="modal-device-badges" class="flex items-center gap-1.5"></div>
@@ -350,6 +353,13 @@
                     <div id="device-screen" class="w-full transition-all duration-300 bg-white rounded-xl overflow-hidden shadow-sm border border-gray-100">
                         <div id="media-container" class="relative bg-gray-900 flex items-center justify-center overflow-hidden">
                             <img id="modal-image" src="" alt="Template Preview" class="w-full h-full">
+                            <button onclick="previewGalleryStep(-1)" id="gallery-prev-btn" class="hidden absolute left-2 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white text-gray-900 rounded-full w-8 h-8 flex items-center justify-center shadow-md">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                            </button>
+                            <button onclick="previewGalleryStep(1)" id="gallery-next-btn" class="hidden absolute right-2 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white text-gray-900 rounded-full w-8 h-8 flex items-center justify-center shadow-md">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                            </button>
+                            <div id="gallery-dots" class="hidden absolute bottom-2 left-1/2 -translate-x-1/2 flex items-center gap-1.5"></div>
                         </div>
                     </div>
                 </div>
@@ -363,6 +373,13 @@
                     <div>
                         <h4 class="text-xs uppercase font-bold text-gray-400 tracking-wider mb-2">Key Highlights</h4>
                         <ul id="modal-features" class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs text-gray-700"></ul>
+                    </div>
+
+                    <div id="modal-tutorial-container" class="hidden">
+                        <a id="modal-tutorial-link" href="#" target="_blank" rel="noopener" class="inline-flex items-center gap-2 bg-rose-50 hover:bg-rose-100 text-rose-600 text-xs font-semibold px-3.5 py-2 rounded-xl transition">
+                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M10 15l5.19-3L10 9v6zm11.56-7.83c.13.47.22 1.1.28 1.9.07.8.1 1.49.1 2.09L22 12c0 2.19-.16 3.8-.44 4.83-.25.9-.83 1.48-1.73 1.73-.47.13-1.33.22-2.65.28-1.3.07-2.49.1-3.59.1L12 19c-4.19 0-6.8-.16-7.83-.44-.9-.25-1.48-.83-1.73-1.73-.13-.47-.22-1.1-.28-1.9-.07-.8-.1-1.49-.1-2.09L2 12c0-2.19.16-3.8.44-4.83.25-.9.83-1.48 1.73-1.73.47-.13 1.33-.22 2.65-.28 1.3-.07 2.49-.1 3.59-.1L12 5c4.19 0 6.8.16 7.83.44.9.25 1.48.83 1.73 1.73z"/></svg>
+                            <span>Watch Tutorial on YouTube</span>
+                        </a>
                     </div>
                 </div>
             </div>
@@ -570,16 +587,17 @@
                     </div>
                 </div>
 
-                <!-- Thumbnail Image File Upload and Base64 Converter -->
+                <!-- Thumbnail Image Gallery Upload (Multiple Photos) -->
                 <div class="bg-gray-50 p-3.5 rounded-2xl border border-gray-200/80 space-y-3">
                     <div class="flex items-center justify-between">
-                        <label class="block font-bold text-gray-800">Thumbnail Image File *</label>
-                        <span class="text-[10px] text-gray-400">Base64 Direct Persistence</span>
+                        <label class="block font-bold text-gray-800">Photo Gallery *</label>
+                        <span class="text-[10px] text-gray-400">Up to 5 photos</span>
                     </div>
 
                     <div class="flex items-center space-x-2">
-                        <input type="file" id="form-image-file" accept="image/*" onchange="handleImageFileUpload(event)" class="w-full text-xs text-gray-500 file:mr-3 file:py-2 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-gray-900 file:text-white hover:file:bg-gray-800 cursor-pointer">
+                        <input type="file" id="form-image-file" accept="image/*" multiple onchange="handleImageFilesUpload(event)" class="w-full text-xs text-gray-500 file:mr-3 file:py-2 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-gray-900 file:text-white hover:file:bg-gray-800 cursor-pointer">
                     </div>
+                    <p class="text-[10px] text-gray-400">The first photo is used as the cover image. Click a photo below to make it the cover.</p>
 
                     <input type="hidden" id="form-image-data">
 
@@ -604,12 +622,15 @@
                         </div>
                     </div>
 
-                    <!-- Real-Time Cropping/Aspect Ratio Preview -->
+                    <!-- Cover Preview -->
                     <div id="image-preview-container" class="hidden mt-2 bg-gray-900 rounded-xl overflow-hidden p-1 border border-gray-300">
                         <div id="image-preview-box" class="w-full aspect-4-3 overflow-hidden rounded-lg flex items-center justify-center bg-gray-800">
                             <img id="image-preview-element" src="" class="w-full h-full object-cover">
                         </div>
                     </div>
+
+                    <!-- Thumbnail Strip (all uploaded photos, removable) -->
+                    <div id="image-thumbnails-strip" class="hidden flex flex-wrap gap-2 pt-1"></div>
                 </div>
 
                 <div>
@@ -620,6 +641,18 @@
                 <div>
                     <label class="block font-bold text-gray-700 mb-1">Key Features List (Comma Separated)</label>
                     <input type="text" id="form-features" class="w-full border border-gray-200 rounded-xl p-2.5 focus:outline-none focus:ring-2 focus:ring-rose-200" placeholder="Automated Calculations, Mobile Friendly, Free Updates">
+                </div>
+
+                <div>
+                    <label class="block font-bold text-gray-700 mb-1">Author / Creator Credit (optional)</label>
+                    <input type="text" id="form-author" class="w-full border border-gray-200 rounded-xl p-2.5 focus:outline-none focus:ring-2 focus:ring-rose-200" placeholder="e.g. Rex Batenga">
+                    <p class="text-[10px] text-gray-400 mt-1">Leave blank to list this under CheemsCraft. Use this if someone else made the template and wants credit.</p>
+                </div>
+
+                <div>
+                    <label class="block font-bold text-gray-700 mb-1">YouTube Tutorial Link (optional)</label>
+                    <input type="url" id="form-youtube" class="w-full border border-gray-200 rounded-xl p-2.5 focus:outline-none focus:ring-2 focus:ring-rose-200" placeholder="https://youtube.com/watch?v=...">
+                    <p class="text-[10px] text-gray-400 mt-1">Leave blank if you don't have a walkthrough video for this template yet.</p>
                 </div>
 
                 <div class="pt-3 flex justify-end gap-2 sticky bottom-0 bg-white py-2 border-t border-gray-100">
@@ -762,6 +795,10 @@
         let selectedPlatform = 'all';
         let activeCurrency = 'PHP';
         let ordersFilter = 'active';
+        let currentFormImages = [];
+        let previewGalleryImages = [];
+        let previewGalleryIndex = 0;
+        const MAX_LISTING_IMAGES = 5;
 
         const exchangeRates = {
             PHP: 1, USD: 0.018, SGD: 0.024, MYR: 0.084, IDR: 280.0,
@@ -946,6 +983,8 @@
                 } catch(err) {
                     console.error("Error saving message to Firestore:", err);
                     saveMessageLocally(newMessage);
+                    alert("We couldn't confirm your message due to a connection issue, so it may not have reached us. Please check your internet connection and press Send Message again.");
+                    return;
                 }
             } else {
                 saveMessageLocally(newMessage);
@@ -1246,6 +1285,8 @@
                 const aspectCls = p.aspectRatio || "aspect-4-3";
                 const fitCls = p.objectFit || "object-cover";
                 const isLocal = p.listingType === 'local';
+                const galleryImgs = Array.isArray(p.images) && p.images.length ? p.images : [p.image];
+                const coverImg = galleryImgs[0];
 
                 const buyBtnAction = isLocal ? 
                     `openGcashModal('${p.id}')` : 
@@ -1253,15 +1294,17 @@
 
                 card.innerHTML = `
                     <div class="relative w-full ${aspectCls} bg-gray-900 overflow-hidden cursor-pointer flex items-center justify-center" onclick="openPreviewModal('${p.id}')">
-                        <img src="${p.image}" alt="${p.title}" class="w-full h-full ${fitCls} group-hover:scale-105 transition-transform duration-500" onerror="this.src='https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=800&q=80'">
+                        <img src="${coverImg}" alt="${p.title}" class="w-full h-full ${fitCls} group-hover:scale-105 transition-transform duration-500" onerror="this.src='https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=800&q=80'">
                         <div class="absolute top-3 left-3 flex gap-1.5 flex-wrap">
                             <span class="bg-white/90 backdrop-blur-md text-gray-900 text-[10px] font-bold px-2.5 py-1 rounded-full shadow-sm">${p.platform}</span>
                             ${isLocal ? `<span class="bg-emerald-500 text-white text-[10px] font-bold px-2.5 py-1 rounded-full shadow-sm">GCash Direct</span>` : ''}
                         </div>
+                        ${galleryImgs.length > 1 ? `<span class="absolute bottom-3 right-3 bg-gray-900/80 text-white text-[10px] font-bold px-2 py-1 rounded-full">+${galleryImgs.length - 1} photos</span>` : ''}
                     </div>
 
                     <div class="p-5 flex flex-col flex-grow">
-                        <h3 onclick="openPreviewModal('${p.id}')" class="font-bold text-gray-900 text-base leading-snug mb-2 hover:text-rose-600 cursor-pointer transition line-clamp-2">${p.title}</h3>
+                        <h3 onclick="openPreviewModal('${p.id}')" class="font-bold text-gray-900 text-base leading-snug mb-1 hover:text-rose-600 cursor-pointer transition line-clamp-2">${p.title}</h3>
+                        ${p.author ? `<p class="text-[10px] font-semibold text-gray-400 mb-2">by: ${p.author}</p>` : ''}
                         <p class="text-xs text-gray-500 line-clamp-2 leading-relaxed mb-4 flex-grow">${p.description}</p>
                         
                         <div class="pt-3 border-t border-gray-50 flex items-center justify-between mt-auto">
@@ -1294,6 +1337,14 @@
 
             document.getElementById('modal-title').textContent = item.title;
             document.getElementById('modal-platform-badge').textContent = item.platform;
+
+            const authorEl = document.getElementById('modal-author');
+            if (item.author) {
+                authorEl.textContent = `by: ${item.author}`;
+                authorEl.classList.remove('hidden');
+            } else {
+                authorEl.classList.add('hidden');
+            }
             
             const audMap = { business: 'Small Business 💼', students: 'Students 🎓', employees: 'Employees 🏢', creators: 'Creators 🎨' };
             const audContainer = document.getElementById('modal-audience-badges');
@@ -1332,9 +1383,12 @@
             const imgEl = document.getElementById('modal-image');
             const mediaCont = document.getElementById('media-container');
 
-            imgEl.src = item.image;
+            previewGalleryImages = Array.isArray(item.images) && item.images.length ? item.images : [item.image];
+            previewGalleryIndex = 0;
+
             mediaCont.className = `relative w-full ${item.aspectRatio || 'aspect-4-3'} bg-gray-900 flex items-center justify-center overflow-hidden`;
             imgEl.className = `w-full h-full ${item.objectFit || 'object-cover'}`;
+            renderPreviewGallery();
 
             const featEl = document.getElementById('modal-features');
             featEl.innerHTML = '';
@@ -1345,12 +1399,51 @@
                 featEl.appendChild(li);
             });
 
+            const tutorialContainer = document.getElementById('modal-tutorial-container');
+            const tutorialLink = document.getElementById('modal-tutorial-link');
+            if (item.youtubeUrl) {
+                tutorialLink.href = item.youtubeUrl;
+                tutorialContainer.classList.remove('hidden');
+            } else {
+                tutorialContainer.classList.add('hidden');
+            }
+
             renderDeviceBadges(item.devices || []);
             document.getElementById('preview-modal').classList.remove('hidden');
         }
 
         function closePreviewModal() {
             document.getElementById('preview-modal').classList.add('hidden');
+        }
+
+        function renderPreviewGallery() {
+            const imgEl = document.getElementById('modal-image');
+            const prevBtn = document.getElementById('gallery-prev-btn');
+            const nextBtn = document.getElementById('gallery-next-btn');
+            const dots = document.getElementById('gallery-dots');
+
+            imgEl.src = previewGalleryImages[previewGalleryIndex];
+
+            const hasMultiple = previewGalleryImages.length > 1;
+            prevBtn.classList.toggle('hidden', !hasMultiple);
+            nextBtn.classList.toggle('hidden', !hasMultiple);
+            dots.classList.toggle('hidden', !hasMultiple);
+
+            dots.innerHTML = '';
+            if (hasMultiple) {
+                previewGalleryImages.forEach((_, idx) => {
+                    const dot = document.createElement('span');
+                    dot.className = `w-1.5 h-1.5 rounded-full ${idx === previewGalleryIndex ? 'bg-white' : 'bg-white/40'}`;
+                    dots.appendChild(dot);
+                });
+            }
+        }
+
+        function previewGalleryStep(delta) {
+            const len = previewGalleryImages.length;
+            if (len <= 1) return;
+            previewGalleryIndex = (previewGalleryIndex + delta + len) % len;
+            renderPreviewGallery();
         }
 
         function renderDeviceBadges(devices) {
@@ -1392,18 +1485,62 @@
             document.getElementById('gcash-checkout-modal').classList.add('hidden');
         }
 
-        function handleReceiptUpload(event) {
+        // Resizes/compresses an image file client-side so the resulting base64
+        // stays comfortably under Firestore's 1MB-per-document limit. This is
+        // the fix for mobile/tablet camera photos being too large to sync.
+        function compressImageToDataURL(file, maxDimension, initialQuality, maxDataUrlLength) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const img = new Image();
+                    img.onload = () => {
+                        let { width, height } = img;
+                        if (width > maxDimension || height > maxDimension) {
+                            if (width > height) {
+                                height = Math.round(height * (maxDimension / width));
+                                width = maxDimension;
+                            } else {
+                                width = Math.round(width * (maxDimension / height));
+                                height = maxDimension;
+                            }
+                        }
+                        const canvas = document.createElement('canvas');
+                        canvas.width = width;
+                        canvas.height = height;
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(img, 0, 0, width, height);
+
+                        let quality = initialQuality;
+                        let dataUrl = canvas.toDataURL('image/jpeg', quality);
+                        let attempts = 0;
+                        while (dataUrl.length > maxDataUrlLength && quality > 0.3 && attempts < 8) {
+                            quality -= 0.1;
+                            dataUrl = canvas.toDataURL('image/jpeg', quality);
+                            attempts++;
+                        }
+                        resolve(dataUrl);
+                    };
+                    img.onerror = () => reject(new Error("Could not read that image file."));
+                    img.src = e.target.result;
+                };
+                reader.onerror = () => reject(new Error("Could not read that file."));
+                reader.readAsDataURL(file);
+            });
+        }
+
+        async function handleReceiptUpload(event) {
             const file = event.target.files[0];
             if (!file) return;
 
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                const base64 = e.target.result;
-                document.getElementById('buyer-receipt-data').value = base64;
-                document.getElementById('receipt-preview-img').src = base64;
+            try {
+                const compressed = await compressImageToDataURL(file, 1200, 0.75, 700000);
+                document.getElementById('buyer-receipt-data').value = compressed;
+                document.getElementById('receipt-preview-img').src = compressed;
                 document.getElementById('receipt-preview-box').classList.remove('hidden');
-            };
-            reader.readAsDataURL(file);
+            } catch (err) {
+                console.error("Receipt compression error:", err);
+                alert("We couldn't process that screenshot. Please try a different image.");
+            }
         }
 
         async function handleGcashOrderSubmit(e) {
@@ -1437,6 +1574,8 @@
                 } catch(err) {
                     console.error("Error saving order to Firestore:", err);
                     saveOrderLocally(newOrder);
+                    alert("We couldn't confirm your order due to a connection issue, so it may not have reached us. Please check your internet connection and press Submit again to make sure your order goes through.");
+                    return;
                 }
             } else {
                 saveOrderLocally(newOrder);
@@ -1628,22 +1767,78 @@
             }
         }
 
-        function handleImageFileUpload(event) {
-            const file = event.target.files[0];
-            if (!file) return;
+        async function handleImageFilesUpload(event) {
+            const files = Array.from(event.target.files || []);
+            if (!files.length) return;
 
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                const base64Data = e.target.result;
-                document.getElementById('form-image-data').value = base64Data;
-                
-                const previewImg = document.getElementById('image-preview-element');
-                previewImg.src = base64Data;
-                
-                document.getElementById('image-preview-container').classList.remove('hidden');
-                updateImagePreviewControls();
-            };
-            reader.readAsDataURL(file);
+            const remainingSlots = MAX_LISTING_IMAGES - currentFormImages.length;
+            if (remainingSlots <= 0) {
+                alert(`You can only attach up to ${MAX_LISTING_IMAGES} photos per listing.`);
+                event.target.value = '';
+                return;
+            }
+            const filesToProcess = files.slice(0, remainingSlots);
+            if (files.length > remainingSlots) {
+                alert(`Only ${remainingSlots} more photo(s) can be added (max ${MAX_LISTING_IMAGES} per listing). The rest were skipped.`);
+            }
+
+            for (const file of filesToProcess) {
+                try {
+                    const compressed = await compressImageToDataURL(file, 1200, 0.75, 130000);
+                    currentFormImages.push(compressed);
+                } catch (err) {
+                    console.error("Thumbnail compression error:", err);
+                    alert(`We couldn't process "${file.name}". Skipping that one.`);
+                }
+            }
+
+            event.target.value = '';
+            renderImageThumbnails();
+        }
+
+        function renderImageThumbnails() {
+            const previewContainer = document.getElementById('image-preview-container');
+            const previewImg = document.getElementById('image-preview-element');
+            const strip = document.getElementById('image-thumbnails-strip');
+            const hiddenField = document.getElementById('form-image-data');
+
+            hiddenField.value = currentFormImages[0] || '';
+
+            if (currentFormImages.length === 0) {
+                previewContainer.classList.add('hidden');
+                strip.classList.add('hidden');
+                strip.innerHTML = '';
+                return;
+            }
+
+            previewImg.src = currentFormImages[0];
+            previewContainer.classList.remove('hidden');
+            updateImagePreviewControls();
+
+            strip.innerHTML = '';
+            currentFormImages.forEach((imgData, idx) => {
+                const wrap = document.createElement('div');
+                wrap.className = `relative w-16 h-16 rounded-lg overflow-hidden border-2 ${idx === 0 ? 'border-rose-400' : 'border-transparent'} cursor-pointer group`;
+                wrap.innerHTML = `
+                    <img src="${imgData}" onclick="setCoverImage(${idx})" class="w-full h-full object-cover">
+                    ${idx === 0 ? `<span class="absolute bottom-0 inset-x-0 bg-rose-500 text-white text-[8px] font-bold text-center py-0.5">COVER</span>` : ''}
+                    <button type="button" onclick="removeFormImage(${idx})" class="absolute top-0.5 right-0.5 bg-gray-900/80 hover:bg-rose-600 text-white rounded-full w-4 h-4 flex items-center justify-center text-[9px] leading-none">&times;</button>
+                `;
+                strip.appendChild(wrap);
+            });
+            strip.classList.remove('hidden');
+        }
+
+        function setCoverImage(idx) {
+            if (idx <= 0 || idx >= currentFormImages.length) return;
+            const [chosen] = currentFormImages.splice(idx, 1);
+            currentFormImages.unshift(chosen);
+            renderImageThumbnails();
+        }
+
+        function removeFormImage(idx) {
+            currentFormImages.splice(idx, 1);
+            renderImageThumbnails();
         }
 
         function updateImagePreviewControls() {
@@ -1662,9 +1857,9 @@
         function openProductModal(editId = null) {
             const form = document.getElementById('product-form');
             form.reset();
-            document.getElementById('form-image-data').value = '';
-            document.getElementById('image-preview-container').classList.add('hidden');
-            
+            currentFormImages = [];
+            renderImageThumbnails();
+
             if (editId) {
                 const item = products.find(p => p.id === editId);
                 if (item) {
@@ -1679,15 +1874,13 @@
                     if (listingRadio) listingRadio.checked = true;
                     toggleListingFields();
 
-                    document.getElementById('form-image-data').value = item.image || '';
                     document.getElementById('form-aspect-ratio').value = item.aspectRatio || 'aspect-4-3';
                     document.getElementById('form-object-fit').value = item.objectFit || 'object-cover';
-                    
-                    if (item.image) {
-                        document.getElementById('image-preview-element').src = item.image;
-                        document.getElementById('image-preview-container').classList.remove('hidden');
-                        updateImagePreviewControls();
-                    }
+
+                    currentFormImages = Array.isArray(item.images) && item.images.length
+                        ? [...item.images]
+                        : (item.image ? [item.image] : []);
+                    renderImageThumbnails();
 
                     const auds = Array.isArray(item.audiences) ? item.audiences : (item.audience ? [item.audience] : []);
                     document.querySelectorAll('input[name="form-audience-check"]').forEach(cb => {
@@ -1701,6 +1894,8 @@
 
                     document.getElementById('form-description').value = item.description;
                     document.getElementById('form-features').value = (item.features || []).join(', ');
+                    document.getElementById('form-author').value = item.author || '';
+                    document.getElementById('form-youtube').value = item.youtubeUrl || '';
                 }
             } else {
                 document.getElementById('creator-modal-title').textContent = "Add New Template Listing";
@@ -1736,7 +1931,8 @@
             });
 
             const listingType = document.querySelector('input[name="form-listing-type"]:checked').value;
-            const imgData = document.getElementById('form-image-data').value || 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=800&q=80';
+            const fallbackImage = 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=800&q=80';
+            const finalImages = currentFormImages.length ? currentFormImages : [fallbackImage];
 
             const newItem = {
                 title: document.getElementById('form-title').value,
@@ -1746,12 +1942,21 @@
                 price: parseFloat(document.getElementById('form-price').value) || 0,
                 listingType: listingType,
                 checkout: document.getElementById('form-checkout').value || 'https://raket.ph',
-                image: imgData,
+                images: finalImages,
+                image: finalImages[0],
                 aspectRatio: document.getElementById('form-aspect-ratio').value,
                 objectFit: document.getElementById('form-object-fit').value,
                 description: document.getElementById('form-description').value,
-                features
+                features,
+                author: document.getElementById('form-author').value.trim(),
+                youtubeUrl: document.getElementById('form-youtube').value.trim()
             };
+
+            const totalImageBytes = finalImages.reduce((sum, img) => sum + img.length, 0);
+            if (totalImageBytes > 900000) {
+                alert("This listing's photos are too large combined. Please remove a photo or two and try again.");
+                return;
+            }
 
             if (isFirebaseConnected && db) {
                 try {
@@ -1759,6 +1964,8 @@
                 } catch(err) {
                     console.error("Firestore write error:", err);
                     saveLocallyFallback(id, newItem);
+                    alert("Warning: this template could not be synced to the cloud (it may be too large, or your connection dropped). It has only been saved on THIS device and won't show up elsewhere until it syncs. Please check your connection and try saving again.");
+                    return;
                 }
             } else {
                 saveLocallyFallback(id, newItem);

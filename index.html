@@ -1261,7 +1261,7 @@
 
             grid.innerHTML = '';
 
-            const filtered = products.filter(p => {
+            const filtered = getSortedProducts().filter(p => {
                 const audList = Array.isArray(p.audiences) ? p.audiences : (p.audience ? [p.audience] : []);
                 const matchAudience = selectedAudience === 'all' || audList.includes(selectedAudience);
                 const matchPlatform = selectedPlatform === 'all' || p.platform === selectedPlatform;
@@ -1321,6 +1321,9 @@
 
                     ${isCreatorMode ? `
                         <div class="absolute top-3 right-3 flex items-center space-x-1 bg-gray-900/90 backdrop-blur-md p-1 rounded-xl shadow-lg">
+                            <button onclick="moveProductInOrder('${p.id}', -1)" title="Move up" class="text-white hover:text-amber-300 p-1 text-xs px-1.5 font-bold">&#9650;</button>
+                            <button onclick="moveProductInOrder('${p.id}', 1)" title="Move down" class="text-white hover:text-amber-300 p-1 text-xs px-1.5 font-bold">&#9660;</button>
+                            <span class="text-gray-600">|</span>
                             <button onclick="editProduct('${p.id}')" class="text-white hover:text-amber-300 p-1 text-xs px-2 font-semibold">Edit</button>
                             <span class="text-gray-600">|</span>
                             <button onclick="deleteProduct('${p.id}')" class="text-rose-400 hover:text-rose-300 p-1 text-xs px-2 font-semibold">Delete</button>
@@ -1934,6 +1937,9 @@
             const fallbackImage = 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=800&q=80';
             const finalImages = currentFormImages.length ? currentFormImages : [fallbackImage];
 
+            const existingItem = products.find(p => p.id === id);
+            const sortOrder = existingItem && typeof existingItem.sortOrder === 'number' ? existingItem.sortOrder : Date.now();
+
             const newItem = {
                 title: document.getElementById('form-title').value,
                 platform: document.getElementById('form-platform').value,
@@ -1946,6 +1952,7 @@
                 image: finalImages[0],
                 aspectRatio: document.getElementById('form-aspect-ratio').value,
                 objectFit: document.getElementById('form-object-fit').value,
+                sortOrder: sortOrder,
                 description: document.getElementById('form-description').value,
                 features,
                 author: document.getElementById('form-author').value.trim(),
@@ -1984,6 +1991,46 @@
 
         function editProduct(id) {
             openProductModal(id);
+        }
+
+        function orderKey(p) {
+            if (typeof p.sortOrder === 'number') return p.sortOrder;
+            const num = parseInt((p.id || '').replace(/[^0-9]/g, ''), 10);
+            return isNaN(num) ? 0 : num;
+        }
+
+        function getSortedProducts() {
+            return [...products].sort((a, b) => orderKey(a) - orderKey(b));
+        }
+
+        async function moveProductInOrder(id, direction) {
+            const sorted = getSortedProducts();
+            const idx = sorted.findIndex(p => p.id === id);
+            if (idx === -1) return;
+            const swapIdx = idx + direction;
+            if (swapIdx < 0 || swapIdx >= sorted.length) return;
+
+            const current = sorted[idx];
+            const swapWith = sorted[swapIdx];
+            const currentOrder = orderKey(current);
+            const swapOrder = orderKey(swapWith);
+
+            current.sortOrder = swapOrder;
+            swapWith.sortOrder = currentOrder;
+
+            if (isFirebaseConnected && db) {
+                try {
+                    const batch = db.batch();
+                    batch.update(db.collection('templates').doc(current.id), { sortOrder: current.sortOrder });
+                    batch.update(db.collection('templates').doc(swapWith.id), { sortOrder: swapWith.sortOrder });
+                    await batch.commit();
+                } catch(err) {
+                    console.error("Firestore reorder error:", err);
+                    alert("Warning: the new order could not be synced to the cloud. It will only show on this device until you retry.");
+                }
+            }
+            saveLocalProducts();
+            renderStorefront();
         }
 
         async function deleteProduct(id) {

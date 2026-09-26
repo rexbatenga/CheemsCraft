@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CheemsCraft Templates & UI Kits</title>
+    <title>SwiftTemp — Digital Assets & Templates</title>
     
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="Cc logo.png">
@@ -91,11 +91,11 @@
             
             <!-- Branding: Logo Image & Title (Triple-click trigger for Creator Mode) -->
             <div class="flex items-center space-x-3 cursor-pointer group select-none" id="brand-logo-trigger" onclick="handleLogoClick()">
-                <img src="Cc logo.png" alt="CheemsCraft Logo" class="h-10 w-auto object-contain transition-transform group-hover:scale-105" onerror="this.style.display='none'; document.getElementById('fallback-logo-icon').style.display='flex'">
-                <div id="fallback-logo-icon" class="hidden h-10 w-10 bg-gray-900 text-white font-bold text-lg items-center justify-center rounded-xl">Cc</div>
+                <img src="Cc logo.png" alt="SwiftTemp Logo" class="h-10 w-auto object-contain transition-transform group-hover:scale-105" onerror="this.style.display='none'; document.getElementById('fallback-logo-icon').style.display='flex'">
+                <div id="fallback-logo-icon" class="hidden h-10 w-10 bg-gray-900 text-white font-bold text-lg items-center justify-center rounded-xl">ST</div>
                 <div class="flex flex-col">
-                    <span class="font-serif text-2xl font-bold tracking-tight text-gray-900 leading-tight">CheemsCraft</span>
-                    <span class="text-[11px] font-semibold text-gray-500 uppercase tracking-wider">Templates & UI Kits</span>
+                    <span class="font-serif text-2xl font-bold tracking-tight text-gray-900 leading-tight">SwiftTemp</span>
+                    <span class="text-[11px] font-semibold text-gray-500 uppercase tracking-wider">Digital Assets & Templates</span>
                 </div>
             </div>
 
@@ -193,7 +193,7 @@
     <!-- Footer -->
     <footer class="border-t border-gray-100 py-8 bg-gray-50/50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-gray-500">
-            <p>&copy; CheemsCraft Templates & UI Kits. All rights reserved.</p>
+            <p>&copy; SwiftTemp — Digital Assets & Templates. All rights reserved.</p>
             <div class="flex items-center space-x-4">
                 <span id="geo-status" class="text-gray-400">Detecting Region...</span>
                 <button onclick="openAuthModal()" class="text-[11px] text-gray-400 hover:text-gray-600 transition underline">
@@ -268,7 +268,7 @@
             <form id="message-form" onsubmit="handleMessageSubmit(event)" class="space-y-3 text-xs">
                 <div>
                     <label class="block font-bold text-gray-700 mb-1">Facebook Name / Username *</label>
-                    <input type="text" id="msg-fb-name" required placeholder="e.g. rex.renaciabatenga" class="w-full border border-gray-200 rounded-xl p-2.5 focus:outline-none focus:ring-2 focus:ring-rose-200 focus:border-rose-400">
+                    <input type="text" id="msg-fb-name" required placeholder="e.g. John Doe" class="w-full border border-gray-200 rounded-xl p-2.5 focus:outline-none focus:ring-2 focus:ring-rose-200 focus:border-rose-400">
                 </div>
 
                 <div>
@@ -457,7 +457,7 @@
 
                     <div>
                         <label class="block font-bold text-gray-700 mb-1">Facebook Username (optional)</label>
-                        <input type="text" id="buyer-fb" placeholder="e.g. rex.renaciabatenga or your profile link" class="w-full border border-gray-200 rounded-xl p-2.5 text-xs focus:outline-none focus:ring-2 focus:ring-rose-200">
+                        <input type="text" id="buyer-fb" placeholder="e.g. John Doe or your profile link" class="w-full border border-gray-200 rounded-xl p-2.5 text-xs focus:outline-none focus:ring-2 focus:ring-rose-200">
                     </div>
 
                     <div>
@@ -646,7 +646,7 @@
                 <div>
                     <label class="block font-bold text-gray-700 mb-1">Author / Creator Credit (optional)</label>
                     <input type="text" id="form-author" class="w-full border border-gray-200 rounded-xl p-2.5 focus:outline-none focus:ring-2 focus:ring-rose-200" placeholder="e.g. Rex Batenga">
-                    <p class="text-[10px] text-gray-400 mt-1">Leave blank to list this under CheemsCraft. Use this if someone else made the template and wants credit.</p>
+                    <p class="text-[10px] text-gray-400 mt-1">Leave blank to list this under SwiftTemp. Use this if someone else made the template and wants credit.</p>
                 </div>
 
                 <div>
@@ -897,18 +897,18 @@
         }
 
         function loadLocalProducts() {
-            const saved = localStorage.getItem('cheemscraft_products');
+            const saved = localStorage.getItem('swifttemp_products');
             if (saved) {
                 try { products = JSON.parse(saved); } catch(e) {}
             }
         }
 
         function saveLocalProducts() {
-            localStorage.setItem('cheemscraft_products', JSON.stringify(products));
+            localStorage.setItem('swifttemp_products', JSON.stringify(products));
         }
 
         function loadLocalOrders() {
-            const saved = localStorage.getItem('cheemscraft_orders');
+            const saved = localStorage.getItem('swifttemp_orders');
             if (saved) {
                 try { 
                     orders = JSON.parse(saved); 
@@ -918,7 +918,7 @@
         }
 
         function saveLocalOrders() {
-            localStorage.setItem('cheemscraft_orders', JSON.stringify(orders));
+            localStorage.setItem('swifttemp_orders', JSON.stringify(orders));
         }
 
         function updatePendingOrdersBadge() {
@@ -1004,7 +1004,7 @@
         }
 
         function loadLocalMessages() {
-            const saved = localStorage.getItem('cheemscraft_messages');
+            const saved = localStorage.getItem('swifttemp_messages');
             if (saved) {
                 try {
                     messages = JSON.parse(saved);
@@ -1014,7 +1014,7 @@
         }
 
         function saveLocalMessages() {
-            localStorage.setItem('cheemscraft_messages', JSON.stringify(messages));
+            localStorage.setItem('swifttemp_messages', JSON.stringify(messages));
         }
 
         function updatePendingMessagesBadge() {
@@ -1071,8 +1071,8 @@
                 const isNew = msg.status === 'New';
                 const statusCls = isNew ? 'bg-indigo-100 text-indigo-800' : 'bg-emerald-100 text-emerald-800';
 
-                const subject = encodeURIComponent(`Re: Your CheemsCraft Template Request`);
-                const body = encodeURIComponent(`Hi ${msg.fbName},\n\nThanks for reaching out to CheemsCraft! Regarding your request:\n\n${msg.description}\n\n[Write your reply here]\n\nBest regards,\nRex / CheemsCraft`);
+                const subject = encodeURIComponent(`Re: Your SwiftTemp Template Request`);
+                const body = encodeURIComponent(`Hi ${msg.fbName},\n\nThanks for reaching out to SwiftTemp! Regarding your request:\n\n${msg.description}\n\n[Write your reply here]\n\nBest regards,\nRex / SwiftTemp`);
                 const gmailUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(msg.email)}&su=${subject}&body=${body}`;
 
                 card.innerHTML = `
@@ -1650,8 +1650,8 @@
                 const statusCls = isPending ? 'bg-amber-100 text-amber-800' : 'bg-emerald-100 text-emerald-800';
 
                 // Gmail direct compose link construction
-                const subject = encodeURIComponent(`CheemsCraft Order Fulfillment: ${ord.productTitle}`);
-                const body = encodeURIComponent(`Hi there,\n\nThank you for purchasing ${ord.productTitle} from CheemsCraft!\n\nHere is your direct access link / file:\n[Insert Link Here]\n\nIf you have any questions, feel free to reply to this email.\n\nBest regards,\nRex / CheemsCraft`);
+                const subject = encodeURIComponent(`SwiftTemp Order Fulfillment: ${ord.productTitle}`);
+                const body = encodeURIComponent(`Hi there,\n\nThank you for purchasing ${ord.productTitle} from SwiftTemp!\n\nHere is your direct access link / file:\n[Insert Link Here]\n\nIf you have any questions, feel free to reply to this email.\n\nBest regards,\nRex / SwiftTemp`);
                 const gmailUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(ord.buyerEmail)}&su=${subject}&body=${body}`;
 
                 card.innerHTML = `
@@ -1728,7 +1728,7 @@
         function sendFulfillmentEmail(gmailUrl, recipientEmail) {
             const win = window.open(gmailUrl, '_blank');
             if (!win || win.closed || typeof win.closed === 'undefined') {
-                window.location.href = `mailto:${recipientEmail}?subject=CheemsCraft Order Fulfillment`;
+                window.location.href = `mailto:${recipientEmail}?subject=SwiftTemp Order Fulfillment`;
             }
         }
 
